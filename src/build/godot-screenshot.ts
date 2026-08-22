@@ -209,7 +209,7 @@ export function captureScreenshot(
       errors,
     },
     exitCode: status === "pass" ? 0 : 1,
-    summary: `godot.screenshot: ${status}${success ? ` (${finalOutputPath})` : ` (${errors.length} error(s))`}`,
+    summary: `godot.screenshot: ${status}${success ? ` (${finalOutputPath})` : ` (${errors.length} error${errors.length === 1 ? "" : "s"})`}`,
   };
 }
 

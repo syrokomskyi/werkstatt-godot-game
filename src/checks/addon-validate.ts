@@ -21,7 +21,7 @@
 
 import { existsSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
-import { join, } from "node:path";
+import { join } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
@@ -156,7 +156,7 @@ export async function validateAddons(
       violations,
     },
     exitCode: violations.length === 0 ? 0 : 1,
-    summary: `godot.addon.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation(s)`} (${addons.length} addon(s))`,
+    summary: `godot.addon.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`} (${addons.length} addon(s))`,
   };
 }
 

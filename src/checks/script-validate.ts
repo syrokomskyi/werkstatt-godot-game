@@ -136,7 +136,7 @@ export async function validateScripts(
       violations,
     },
     exitCode: violations.length === 0 ? 0 : 1,
-    summary: `godot.script.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation(s)`}`,
+    summary: `godot.script.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
   };
 }
 

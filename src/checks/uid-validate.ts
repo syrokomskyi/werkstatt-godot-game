@@ -59,7 +59,8 @@ export async function validateUids(
       violations.push({
         ruleId: "GODOT-10",
         file: relPath,
-        message: "Missing uid:// declaration — Godot will generate one on first open, causing unnecessary git diffs",
+        message:
+          "Missing uid:// declaration — Godot will generate one on first open, causing unnecessary git diffs",
       });
       continue;
     }
@@ -84,7 +85,7 @@ export async function validateUids(
       violations,
     },
     exitCode: violations.length === 0 ? 0 : 1,
-    summary: `godot.uid.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation(s)`}`,
+    summary: `godot.uid.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
   };
 }
 

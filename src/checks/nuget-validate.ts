@@ -52,8 +52,9 @@ const PROBLEMATIC_PACKAGES: Record<string, string> = {
 const NON_GAME_PACKAGES: Record<string, string> = {
   "Microsoft.AspNetCore.App": "ASP.NET Core is not applicable to Godot game projects",
   "Microsoft.AspNetCore.Mvc": "ASP.NET MVC is not applicable to Godot game projects",
-  "Npgsql": "Direct database drivers are not recommended in game clients — use a server backend",
-  "Microsoft.Data.SqlClient": "Direct database drivers are not recommended in game clients — use a server backend",
+  Npgsql: "Direct database drivers are not recommended in game clients — use a server backend",
+  "Microsoft.Data.SqlClient":
+    "Direct database drivers are not recommended in game clients — use a server backend",
 };
 
 export async function validateNuget(
@@ -122,7 +123,7 @@ export async function validateNuget(
       violations,
     },
     exitCode: violations.length === 0 ? 0 : 1,
-    summary: `godot.nuget.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation(s)`}`,
+    summary: `godot.nuget.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
   };
 }
 
