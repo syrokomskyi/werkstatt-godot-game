@@ -66,7 +66,7 @@
     "build": "pnpm exec tsc -p tsconfig.json --noEmit",
     "build:check": "pnpm exec tsc -p tsconfig.json --noEmit",
     "prepublishOnly": "pnpm exec tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
   "publishConfig": {
