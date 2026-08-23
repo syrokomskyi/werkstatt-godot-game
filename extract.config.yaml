@@ -5,6 +5,7 @@
 projectDir: packages/werkstatt-godot-game
 destName: werkstatt-godot-game
 standalone: true
+versionBump: patch
 
 workspacePrefixes:
   - "@warpgogol/"
