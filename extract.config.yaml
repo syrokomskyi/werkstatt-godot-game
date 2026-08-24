@@ -33,8 +33,10 @@ excludePathSegments:
   - src/tests
 
 postProcess:
-  - action: delete
-    path: AGENTS.md
+  - action: patch
+    file: pnpm-workspace.yaml
+    find: "packages:"
+    replace: "minimumReleaseAge: 0\npackages:"
 
 git:
   remote: git@github.com:syrokomskyi/werkstatt-godot-game.git
