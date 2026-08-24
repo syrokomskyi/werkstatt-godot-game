@@ -23,7 +23,7 @@ import { join } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
-} from "@warpgogol/werkstatt/kernel/types";
+} from "@warpgogol/werkstatt-engine/kernel/types";
 
 export interface NugetValidateViolation {
   ruleId: string;

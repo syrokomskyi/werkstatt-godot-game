@@ -14,7 +14,7 @@
 </CHANGE_SUMMARY>
 */
 
-import type { StackInvariant } from "@warpgogol/werkstatt/plugin";
+import type { StackInvariant } from "@warpgogol/werkstatt-engine/plugin";
 
 export const GODOT_INVARIANTS: StackInvariant[] = [
   {

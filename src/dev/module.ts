@@ -17,7 +17,7 @@ import type {
   KernelModule,
   KernelCommandDefinition,
   KernelCommandResult,
-} from "@warpgogol/werkstatt/kernel/types";
+} from "@warpgogol/werkstatt-engine/kernel/types";
 import { runGodotDevServer } from "../build/godot-dev-server.ts";
 import { runDotnetTest } from "../build/dotnet-test.ts";
 import { runSmokeTest } from "../build/godot-smoke-test.ts";

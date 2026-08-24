@@ -19,7 +19,7 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt/plugin";
+import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-engine/plugin";
 
 export async function runGodotDevServer(ctx: PluginHookContext): Promise<HookResult> {
   const cwd = ctx.workpiecePath ?? ctx.workspaceRoot;

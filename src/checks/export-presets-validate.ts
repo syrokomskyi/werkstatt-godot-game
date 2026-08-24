@@ -24,7 +24,7 @@ import { join } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
-} from "@warpgogol/werkstatt/kernel/types";
+} from "@warpgogol/werkstatt-engine/kernel/types";
 import { parseExportPresets } from "../utils/parse-export-presets.ts";
 
 export interface ExportPresetsValidateViolation {

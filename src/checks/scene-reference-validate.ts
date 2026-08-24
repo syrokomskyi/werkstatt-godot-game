@@ -19,7 +19,7 @@ import { join, relative } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
-} from "@warpgogol/werkstatt/kernel/types";
+} from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
 import { extractResReferences } from "../utils/extract-res-references.ts";
 

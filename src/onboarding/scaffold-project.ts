@@ -25,8 +25,8 @@
 
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { writeFileIfChanged } from "@warpgogol/werkstatt/kernel";
-import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt/plugin";
+import { writeFileIfChanged } from "@warpgogol/werkstatt-engine/kernel";
+import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-engine/plugin";
 
 const PROJECT_GODOT = `; Engine configuration file.
 ; It's best edited using the editor UI and not directly,

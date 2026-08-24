@@ -75,7 +75,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@warpgogol/werkstatt": "*"
+    "@warpgogol/werkstatt-engine": "*"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

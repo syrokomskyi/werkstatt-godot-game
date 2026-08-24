@@ -20,7 +20,7 @@
 </CHANGE_SUMMARY>
 */
 
-import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt/plugin";
+import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-engine/plugin";
 import { validateSceneStructure } from "./scene-validate.ts";
 import { validateGitignore } from "./gitignore-validate.ts";
 import { scanSecrets } from "./secret-scan.ts";

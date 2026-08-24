@@ -13,7 +13,7 @@
 </CHANGE_SUMMARY>
 */
 
-import type { KernelModule } from "@warpgogol/werkstatt/kernel/types";
+import type { KernelModule } from "@warpgogol/werkstatt-engine/kernel/types";
 import { createSceneValidateCommand } from "./scene-validate.ts";
 import { createGitignoreValidateCommand } from "./gitignore-validate.ts";
 import { createSecretScanCommand } from "./secret-scan.ts";
