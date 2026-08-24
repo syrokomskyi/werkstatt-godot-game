@@ -23,7 +23,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-engine/plugin";
+import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-shared/plugin";
 import { parseExportPresets } from "../utils/parse-export-presets.ts";
 
 export async function runDotnetBuild(ctx: PluginHookContext): Promise<HookResult> {

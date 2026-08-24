@@ -19,7 +19,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-engine/plugin";
+import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-shared/plugin";
 
 export async function runDotnetTest(ctx: PluginHookContext): Promise<HookResult> {
   const cwd = ctx.workpiecePath ?? ctx.workspaceRoot;

@@ -24,7 +24,7 @@
 </CHANGE_SUMMARY>
 */
 
-import type { WerkstattPlugin } from "@warpgogol/werkstatt-engine/plugin";
+import type { WerkstattPlugin } from "@warpgogol/werkstatt-shared/plugin";
 import type { KernelModule } from "@warpgogol/werkstatt-engine/kernel/types";
 import { godotPathConventions } from "./paths/godot-paths.ts";
 import { GODOT_INVARIANTS } from "./invariants/godot-invariants.ts";

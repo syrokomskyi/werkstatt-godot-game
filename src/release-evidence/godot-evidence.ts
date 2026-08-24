@@ -26,7 +26,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
-import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-engine/plugin";
+import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-shared/plugin";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
 
 export interface GodotReleaseEvidence {
