@@ -74,6 +74,8 @@ export async function validateSceneReferences(
 export function createSceneReferenceValidateCommand(): KernelCommandDefinition<SceneReferenceValidateData> {
   return {
     name: "godot.scene.reference.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate scene res:// references exist (GODOT-05)",
     scope: "workspace",
     cacheable: false,

@@ -92,6 +92,8 @@ export async function validateUids(
 export function createUidValidateCommand(): KernelCommandDefinition<UidValidateData> {
   return {
     name: "godot.uid.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate UID uniqueness in .tscn and .tres files (GODOT-10)",
     scope: "workspace",
     cacheable: true,

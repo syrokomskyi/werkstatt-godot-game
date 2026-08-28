@@ -76,6 +76,8 @@ export async function validateSceneStructure(
 export function createSceneValidateCommand(): KernelCommandDefinition<SceneValidateData> {
   return {
     name: "godot.scene.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate scene/script directory structure (GODOT-01)",
     scope: "workspace",
     cacheable: false,

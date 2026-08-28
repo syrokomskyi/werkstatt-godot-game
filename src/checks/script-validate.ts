@@ -143,6 +143,8 @@ export async function validateScripts(
 export function createScriptValidateCommand(): KernelCommandDefinition<ScriptValidateData> {
   return {
     name: "godot.script.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate C# script conventions (class name, partial, using Godot)",
     scope: "workspace",
     cacheable: true,

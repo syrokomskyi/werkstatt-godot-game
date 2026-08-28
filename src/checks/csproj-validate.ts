@@ -106,6 +106,8 @@ export async function validateCsproj(
 export function createCsprojValidateCommand(): KernelCommandDefinition<CsprojValidateData> {
   return {
     name: "godot.csproj.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate Game.csproj Godot C# settings (GODOT-06)",
     scope: "workspace",
     cacheable: false,

@@ -82,6 +82,8 @@ export async function validateResources(
 export function createResourceValidateCommand(): KernelCommandDefinition<ResourceValidateData> {
   return {
     name: "godot.resource.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate .tres resource location and references (GODOT-07)",
     scope: "workspace",
     cacheable: false,

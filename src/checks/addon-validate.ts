@@ -163,6 +163,8 @@ export async function validateAddons(
 export function createAddonValidateCommand(): KernelCommandDefinition<AddonValidateData> {
   return {
     name: "godot.addon.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate Godot addons in addons/ directory (GODOT-12)",
     scope: "workspace",
     cacheable: true,

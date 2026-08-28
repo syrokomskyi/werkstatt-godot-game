@@ -138,6 +138,8 @@ export async function validateExportPresets(
 export function createExportPresetsValidateCommand(): KernelCommandDefinition<ExportPresetsValidateData> {
   return {
     name: "godot.export.presets.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate export_presets.cfg for common misconfigurations (GODOT-09)",
     scope: "workspace",
     cacheable: true,

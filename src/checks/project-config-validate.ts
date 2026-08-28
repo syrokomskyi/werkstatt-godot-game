@@ -128,6 +128,8 @@ function extractSection(content: string, sectionHeader: string): string {
 export function createProjectConfigValidateCommand(): KernelCommandDefinition<ProjectConfigValidateData> {
   return {
     name: "godot.project.config.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate project.godot sensitive field changes vs git HEAD (GODOT-04)",
     scope: "workspace",
     cacheable: false,

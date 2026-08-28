@@ -79,6 +79,8 @@ export async function validateGitignore(
 export function createGitignoreValidateCommand(): KernelCommandDefinition<GitignoreValidateData> {
   return {
     name: "godot.gitignore.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate .godot/ is gitignored (GODOT-02)",
     scope: "workspace",
     cacheable: false,

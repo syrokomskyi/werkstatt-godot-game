@@ -130,6 +130,8 @@ export async function validateNuget(
 export function createNugetValidateCommand(): KernelCommandDefinition<NugetValidateData> {
   return {
     name: "godot.nuget.validate",
+    contract: "godot",
+    rules: [],
     description: "Validate NuGet package references in Game.csproj (GODOT-11)",
     scope: "workspace",
     cacheable: true,
