@@ -13,7 +13,6 @@
 </CHANGE_SUMMARY>
 */
 
-import type { KernelModule } from "@warpgogol/werkstatt-engine/kernel/types";
 import { createSceneValidateCommand } from "./scene-validate.ts";
 import { createGitignoreValidateCommand } from "./gitignore-validate.ts";
 import { createSecretScanCommand } from "./secret-scan.ts";
@@ -26,24 +25,27 @@ import { createUidValidateCommand } from "./uid-validate.ts";
 import { createExportPresetsValidateCommand } from "./export-presets-validate.ts";
 import { createNugetValidateCommand } from "./nuget-validate.ts";
 import { createAddonValidateCommand } from "./addon-validate.ts";
+import type { ModuleExport } from "@warpgogol/werkstatt-engine/runtime/desired-state";
 
-export function createGodotCheckModule(): KernelModule {
+export function createGodotCheckModule(): ModuleExport {
   return {
     name: "godot-checks",
     version: "0.4.0",
-    register(registry) {
-      registry.registerCommand(createSceneValidateCommand());
-      registry.registerCommand(createGitignoreValidateCommand());
-      registry.registerCommand(createSecretScanCommand());
-      registry.registerCommand(createProjectConfigValidateCommand());
-      registry.registerCommand(createSceneReferenceValidateCommand());
-      registry.registerCommand(createCsprojValidateCommand());
-      registry.registerCommand(createResourceValidateCommand());
-      registry.registerCommand(createScriptValidateCommand());
-      registry.registerCommand(createUidValidateCommand());
-      registry.registerCommand(createExportPresetsValidateCommand());
-      registry.registerCommand(createNugetValidateCommand());
-      registry.registerCommand(createAddonValidateCommand());
-    },
+    declarations: [],
+    commands: [
+      createSceneValidateCommand(),
+      createGitignoreValidateCommand(),
+      createSecretScanCommand(),
+      createProjectConfigValidateCommand(),
+      createSceneReferenceValidateCommand(),
+      createCsprojValidateCommand(),
+      createResourceValidateCommand(),
+      createScriptValidateCommand(),
+      createUidValidateCommand(),
+      createExportPresetsValidateCommand(),
+      createNugetValidateCommand(),
+      createAddonValidateCommand(),
+    ],
+    pipelines: [],
   };
 }

@@ -14,7 +14,6 @@
 */
 
 import type {
-  KernelModule,
   KernelCommandDefinition,
   KernelCommandResult,
 } from "@warpgogol/werkstatt-engine/kernel/types";
@@ -24,6 +23,7 @@ import { runSmokeTest } from "../build/godot-smoke-test.ts";
 import { generateContext } from "../build/godot-context-generate.ts";
 import { runPlaytest } from "../build/godot-playtest.ts";
 import { captureScreenshot } from "../build/godot-screenshot.ts";
+import type { ModuleExport } from "@warpgogol/werkstatt-engine/runtime/desired-state";
 
 interface DevServerData {
   command: string;
@@ -200,17 +200,19 @@ function createScreenshotCommand(): KernelCommandDefinition<ScreenshotData> {
   };
 }
 
-export function createGodotDevModule(): KernelModule {
+export function createGodotDevModule(): ModuleExport {
   return {
     name: "godot-dev",
     version: "0.3.0",
-    register(registry) {
-      registry.registerCommand(createDevServerCommand());
-      registry.registerCommand(createTestCommand());
-      registry.registerCommand(createSmokeTestCommand());
-      registry.registerCommand(createContextGenerateCommand());
-      registry.registerCommand(createPlaytestCommand());
-      registry.registerCommand(createScreenshotCommand());
-    },
+    declarations: [],
+    commands: [
+      createDevServerCommand(),
+      createTestCommand(),
+      createSmokeTestCommand(),
+      createContextGenerateCommand(),
+      createPlaytestCommand(),
+      createScreenshotCommand(),
+    ],
+    pipelines: [],
   };
 }
