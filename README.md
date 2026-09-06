@@ -4,6 +4,8 @@
 
 Werkstatt plugin for the Godot 4.x + C# + .NET 8+ stack. Implements the `werkstatt/plugin@1` contract: 12 scene/asset/project validators, dotnet build hook, itch.io and GitHub Releases deploy adapters, project scaffold hook, and release evidence generation.
 
+> Engineered at [Warpgogol](https://warpgogol.com) · Released as open source.
+
 ---
 
 ## What this package does
@@ -82,38 +84,38 @@ Credentials are read from the system registry, not from environment variables.
 
 ## Hooks
 
-| Hook | What it does |
-| --- | --- |
-| `build` | Runs `dotnet build ./Game.csproj` then Godot export for each preset |
-| `checkGate` | Runs all 12 validators sequentially |
-| `releaseEvidence` | Generates SHA-256 hashes for release integrity verification |
+| Hook              | What it does                                                                 |
+| ----------------- | ---------------------------------------------------------------------------- |
+| `build`           | Runs `dotnet build ./Game.csproj` then Godot export for each preset          |
+| `checkGate`       | Runs all 12 validators sequentially                                          |
+| `releaseEvidence` | Generates SHA-256 hashes for release integrity verification                  |
 | `scaffoldProject` | Generates Godot project boilerplate (scenes, scripts, csproj, project.godot) |
 
 ---
 
 ## Dev commands
 
-| Command | What it does |
-| --- | --- |
-| `godot.dev.server` | Launches `godot --editor` for interactive development |
-| `godot.test` | Runs `dotnet test` |
-| `godot.smoke.test` | Headless runtime error detection |
-| `godot.playtest` | Gameplay runtime error detection with deterministic input |
-| `godot.screenshot` | Viewport capture via Xvfb |
-| `godot.context.generate` | Structured project summary for AI agents |
+| Command                  | What it does                                              |
+| ------------------------ | --------------------------------------------------------- |
+| `godot.dev.server`       | Launches `godot --editor` for interactive development     |
+| `godot.test`             | Runs `dotnet test`                                        |
+| `godot.smoke.test`       | Headless runtime error detection                          |
+| `godot.playtest`         | Gameplay runtime error detection with deterministic input |
+| `godot.screenshot`       | Viewport capture via Xvfb                                 |
+| `godot.context.generate` | Structured project summary for AI agents                  |
 
 ---
 
 ## Path conventions
 
-| Path | Value |
-| --- | --- |
-| Content directory | `Scenes` |
-| Distribution directory | `bin` |
-| Entry points | `project.godot`, `Game.csproj` |
-| Scenes directory | `Scenes` |
-| Scripts directory | `Scripts` |
-| Resources directory | `Resources` |
+| Path                   | Value                          |
+| ---------------------- | ------------------------------ |
+| Content directory      | `Scenes`                       |
+| Distribution directory | `bin`                          |
+| Entry points           | `project.godot`, `Game.csproj` |
+| Scenes directory       | `Scenes`                       |
+| Scripts directory      | `Scripts`                      |
+| Resources directory    | `Resources`                    |
 
 ---
 
@@ -130,16 +132,16 @@ The plugin exports a single `WerkstattPlugin` object with `profileId: "godot-csh
 
 ### Subpath exports
 
-| Export | What it provides |
-| --- | --- |
-| `@warpgogol/werkstatt-godot-game` | Plugin entry point (`werkstattGodotPlugin`) |
-| `@warpgogol/werkstatt-godot-game/paths` | Godot path constants |
-| `@warpgogol/werkstatt-godot-game/checks` | Check gate runner |
-| `@warpgogol/werkstatt-godot-game/checks/module` | Kernel module with validator registrations |
-| `@warpgogol/werkstatt-godot-game/invariants` | GODOT-01..12 invariant declarations |
-| `@warpgogol/werkstatt-godot-game/deploy/types` | Deploy adapter type definitions |
-| `@warpgogol/werkstatt-godot-game/build` | Dotnet build hook |
-| `@warpgogol/werkstatt-godot-game/release-evidence` | Release evidence hook |
+| Export                                             | What it provides                            |
+| -------------------------------------------------- | ------------------------------------------- |
+| `@warpgogol/werkstatt-godot-game`                  | Plugin entry point (`werkstattGodotPlugin`) |
+| `@warpgogol/werkstatt-godot-game/paths`            | Godot path constants                        |
+| `@warpgogol/werkstatt-godot-game/checks`           | Check gate runner                           |
+| `@warpgogol/werkstatt-godot-game/checks/module`    | Kernel module with validator registrations  |
+| `@warpgogol/werkstatt-godot-game/invariants`       | GODOT-01..12 invariant declarations         |
+| `@warpgogol/werkstatt-godot-game/deploy/types`     | Deploy adapter type definitions             |
+| `@warpgogol/werkstatt-godot-game/build`            | Dotnet build hook                           |
+| `@warpgogol/werkstatt-godot-game/release-evidence` | Release evidence hook                       |
 
 ---
 
@@ -189,3 +191,11 @@ After CI completes, verify the new version on [npmjs.com/package/@warpgogol/werk
 ## License
 
 Apache-2.0
+
+## Open Engineering
+
+This package originated from production engineering work at [Warpgogol](https://warpgogol.com), an engineering studio in Germany.
+
+We publish reusable parts of our infrastructure when they can be useful beyond our own projects. It is published independently of any Warpgogol commercial service. Using this package does not create any dependency on Warpgogol.
+
+Built for real systems. Shared openly.
