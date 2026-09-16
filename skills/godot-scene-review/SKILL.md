@@ -14,6 +14,20 @@ triggers:
   - "review godot pr"
   - "check scene integrity"
 ---
+<!--
+<MODULE_CONTRACT>
+<purpose>godot-scene-review skill — Use this skill when reviewing a pull request, diff, or set of changes in a Godot 4.x + C# project, especially changes touching .tscn, .tres, project.godot, or .csproj files. Ensures serialization and compatibility risks are caught.</purpose>
+<non-goals>
+  <item>Do not execute skill logic — this document instructs agents; it is not runnable code.</item>
+</non-goals>
+</MODULE_CONTRACT>
+<CHANGE_SUMMARY>
+  <item>RFC-1097: sweep — SKILL.md headers + classification fixes
+
+Sweep batch 1: add Compass v2 headers to 45 SKILL.md files (purpose derived from frontmatter description). Fix non-skill-markdown exclusion to check filename not workspace-relative path (packages/AGENTS.md escaped it). Add .coverage to ignoredDirs.</item>
+</CHANGE_SUMMARY>
+-->
+
 
 # Godot Scene & Resource Change Review
 
