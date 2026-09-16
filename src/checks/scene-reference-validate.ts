@@ -1,16 +1,16 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.scene.reference.validate — checks that res:// references in .tscn files point to existing files (GODOT-05).</purpose>
-<keywords>validator, scene, reference, integrity, godot</keywords>
+
 <non-goals>
   <item>Does not modify files — read-only validator.</item>
   <item>Does not validate .tres resource references — that is resource-validate's job.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial scene reference validator — parses .tscn files for res:// paths and checks existence.</item>
-  <item>Fix: use shared extractResReferences from utils/extract-res-references.ts instead of local duplicate.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

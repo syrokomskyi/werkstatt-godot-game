@@ -1,17 +1,15 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Godot stack invariants GODOT-01..12 surfaced to agents.</purpose>
-<keywords>invariants, godot, csharp</keywords>
+
 <non-goals>
   <item>Do not enforce invariants here — enforcement lives in validators.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial Godot stack invariants GODOT-01..04.</item>
-  <item>Enhancement: add GODOT-05 (scene reference integrity), GODOT-06 (csproj settings), GODOT-07 (resource location and references).</item>
-  <item>Enhancement: add GODOT-08 (script conventions), GODOT-09 (export presets), GODOT-10 (UID uniqueness), GODOT-11 (NuGet packages).</item>
-  <item>Enhancement: add GODOT-12 (addon validation).</item>
-  <item>Refactor: derive GODOT_INVARIANTS from the GODOT_CHECKS spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

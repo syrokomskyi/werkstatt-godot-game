@@ -1,11 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.project.config.validate — warns on project.godot sensitive field changes vs git HEAD (GODOT-04).</purpose>
-<keywords>validator, project, godot, config, autoload, input, diff</keywords>
-<responsibilities>
-  <item>Reads current project.godot and compares sensitive sections against git HEAD baseline.</item>
-  <item>Warns only when sensitive sections are added or modified, not on initial presence.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not modify files — read-only validator.</item>
   <item>Does not block — severity is warning only (exitCode 0 always).</item>
@@ -13,9 +10,9 @@
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Fix: make GODOT-04 warning-only (exitCode 0 always) to match described severity. Document presence-based limitation.</item>
-  <item>Enhancement: diff sensitive sections against git HEAD instead of presence check — eliminates false-positives on new projects.</item>
-  <item>Refactor: shared types; git HEAD read via runTool seam; extractSection from utils/godot-project (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

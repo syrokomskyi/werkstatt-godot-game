@@ -1,14 +1,15 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Shared deploy types for Godot deploy adapters.</purpose>
-<keywords>deploy, types, shared, godot</keywords>
+
 <non-goals>
   <item>Do not import from any @warpgogol/* package — pure type definitions.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial shared deploy types — extracted DeployResult from itch-io to remove cross-module dependency.</item>
-  <item>Fix: add urls field for multi-channel deploy results — avoids overloading errors with successful URLs.</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

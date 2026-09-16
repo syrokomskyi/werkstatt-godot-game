@@ -1,12 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>GitHub Releases deploy adapter for the Godot plugin.</purpose>
-<keywords>deploy, github, releases, godot</keywords>
-<responsibilities>
-  <item>Creates a GitHub release and uploads game build artifacts.</item>
-  <item>Credentials (GitHub token) injected from channel config: deploy.github.token.</item>
-  <item>Never reads credentials from environment variables directly.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not build — build hook runs before deploy.</item>
   <item>Does not manage DNS or custom domains.</item>
@@ -15,9 +11,9 @@
 <!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial GitHub Releases deploy adapter — gh release create with build artifacts.</item>
-  <item>Fix: import DeployResult from shared deploy/types.ts instead of itch-io.ts.</item>
-  <item>Refactor: gh release create via runTool seam with injectable executor (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

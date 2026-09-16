@@ -1,12 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.nuget.validate — checks NuGet package references in Game.csproj for Godot compatibility (GODOT-11).</purpose>
-<keywords>validator, nuget, packages, csproj, godot</keywords>
-<responsibilities>
-  <item>Validates that Game.csproj does not reference problematic NuGet packages.</item>
-  <item>Warns about missing recommended packages for Godot C# projects.</item>
-  <item>Checks for version conflicts with Godot's .NET runtime.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not validate csproj SDK settings — that is csproj-validate's job.</item>
   <item>Does not restore packages — use dotnet restore for that.</item>
@@ -14,8 +10,9 @@
 <!-- risk: delete -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial NuGet packages validator — GODOT-11.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

@@ -1,13 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.context.generate — produces a structured summary of a Godot project for AI agent context.</purpose>
-<keywords>context, ai, summary, godot, agent</keywords>
-<responsibilities>
-  <item>Reads project.godot and extracts: main scene, autoloads, input actions, rendering settings, display/stretch settings.</item>
-  <item>Lists all .tscn scenes, .cs scripts, .tres resources with their paths.</item>
-  <item>Lists installed addons with enabled status from project.godot [editor_plugins].</item>
-  <item>Returns a structured object that agents can use as project context.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not validate the project — use validators for that.</item>
   <item>Does not read file contents beyond project.godot — only lists paths.</item>
@@ -15,9 +10,9 @@
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial AI context generator — godot.context.generate.</item>
-  <item>Enhancement: add addons list, enabled plugins, display/stretch settings.</item>
-  <item>Refactor: project.godot parsing via loadGodotProject model; canonical GODOT_SKIP_DIRS (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

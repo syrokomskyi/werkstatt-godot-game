@@ -1,25 +1,17 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Godot project scaffold hook — generates a new Godot 4.x + C# project with scene/script boilerplate.</purpose>
-<keywords>scaffold, onboarding, godot, csharp</keywords>
-<responsibilities>
-  <item>Creates Scenes/Main.tscn with a minimal main scene.</item>
-  <item>Creates Scripts/Main.cs with a minimal Node2D script.</item>
-  <item>Creates project.godot with .NET enabled.</item>
-  <item>Creates Game.csproj for the .NET project.</item>
-  <item>Creates .gitignore with .godot/, bin/, obj/ entries.</item>
-  <item>Creates icon.svg referenced by project.godot.</item>
-  <item>Creates .editorconfig for C# style enforcement.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not install dependencies — the consumer runs dotnet restore after scaffold.</item>
   <item>Does not create game content — games are projects, not plugin content.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial Godot project scaffold — Main scene, Main script, project.godot, Game.csproj, .gitignore.</item>
-  <item>Fix: use writeFileIfChanged instead of raw writeFile to avoid git churn on regeneration.</item>
-  <item>Enhancement: add icon.svg (referenced by project.godot) and .editorconfig for C# style enforcement.</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

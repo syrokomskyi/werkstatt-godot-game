@@ -1,13 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.addon.validate — checks Godot addons in addons/ directory (GODOT-12).</purpose>
-<keywords>validator, addon, plugin, godot, mcp</keywords>
-<responsibilities>
-  <item>Scans addons/ directory for installed addons.</item>
-  <item>Validates each addon has a valid plugin.cfg with required fields.</item>
-  <item>Checks if addon is enabled in project.godot [editor_plugins] section.</item>
-  <item>For C# addons, checks that NuGet dependencies are declared in Game.csproj.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not validate NuGet packages generally — that is nuget-validate's job.</item>
   <item>Does not install or remove addons.</item>
@@ -16,8 +11,9 @@
 <!-- risk: delete -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial addon validator — GODOT-12.</item>
-  <item>Refactor: shared types; enabled-plugin check via loadGodotProject model; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

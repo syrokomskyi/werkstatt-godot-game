@@ -1,12 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Build hook for the Godot plugin — runs dotnet build then Godot export for each preset.</purpose>
-<keywords>build, dotnet, godot, export</keywords>
-<responsibilities>
-  <item>Runs `dotnet build ./Game.csproj` in the workpiece directory.</item>
-  <item>Reads export_presets.cfg and runs `godot --headless --export-release` for each preset.</item>
-  <item>Reports success/failure via HookResult.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not manage deploy — that is the deploy adapter's job.</item>
   <item>Does not run checkGate — that is a separate hook.</item>
@@ -15,10 +11,9 @@
 <!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial dotnet build hook — runs dotnet build via child_process.</item>
-  <item>Enhancement: add Godot export step — reads export_presets.cfg and runs godot --headless --export-release for each preset.</item>
-  <item>Fix: use shared parseExportPresets from utils/parse-export-presets.ts instead of local duplicate.</item>
-  <item>Refactor: route dotnet/godot subprocess calls through runTool seam with injectable executor (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

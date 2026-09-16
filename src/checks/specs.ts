@@ -1,10 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>GODOT check spec table — one declarative entry per invariant; commands, gate, and invariants derive from it.</purpose>
-<keywords>checks, spec, table, validators, godot</keywords>
-<responsibilities>
-  <item>Lists all 12 GODOT checks in gate order with id, command name, description, invariant text, blocking flag, and run function.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not implement validator logic — imports run() functions from validator modules.</item>
   <item>Does not register commands — module.ts maps specs via godotCheckToCommand.</item>
@@ -12,7 +10,9 @@
 <!-- risk: vault -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial spec table — replaces 12 hand-wired command factories, gate call sites, and the invariant table (architecture review candidate #1).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

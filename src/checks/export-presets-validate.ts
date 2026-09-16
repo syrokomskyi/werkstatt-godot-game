@@ -1,12 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.export.presets.validate — checks export_presets.cfg for common misconfigurations (GODOT-09).</purpose>
-<keywords>validator, export, presets, godot, deploy</keywords>
-<responsibilities>
-  <item>Validates export_presets.cfg structure and preset entries.</item>
-  <item>Checks: at least one preset exists, each preset has name/platform/export_path, no empty paths.</item>
-  <item>Checks: export paths are relative (res:// or relative), not absolute filesystem paths.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not run Godot export — that is the build hook's job.</item>
   <item>Does not validate deploy channel mapping — that is the deploy adapter's job.</item>
@@ -14,9 +10,9 @@
 <!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial export presets validator — GODOT-09.</item>
-  <item>Fix: change [preset_N] to [preset.N] (Godot 4.x dot notation) — pre-existing regex bug exposed by scaffolded export_presets.cfg.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

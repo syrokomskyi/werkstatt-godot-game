@@ -1,24 +1,17 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Check gate composition for the Godot plugin — runs all 12 validators.</purpose>
-<keywords>checkgate, validators, godot</keywords>
-<responsibilities>
-  <item>Defines which validators run in checkGate: all 12 (scene, gitignore, secret-scan, project-config, scene-reference, csproj, resource, script, uid, export-presets, nuget, addon).</item>
-  <item>Aggregates results from each validator into a single HookResult.</item>
-  <item>Treats project-config (GODOT-04) as non-blocking warnings.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Do not implement validator logic — orchestrate validators only.</item>
 </non-goals>
 <!-- risk: vault -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial check gate composition running scene, gitignore, secret-scan, and project-config validators.</item>
-  <item>Fix: treat GODOT-04 config validator as non-blocking (warnings only, not errors).</item>
-  <item>Enhancement: add scene-reference (GODOT-05), csproj (GODOT-06), and resource (GODOT-07) validators to check gate.</item>
-  <item>Enhancement: add script (GODOT-08), export-presets (GODOT-09), uid (GODOT-10), and nuget (GODOT-11) validators to check gate.</item>
-  <item>Enhancement: add addon (GODOT-12) validator to check gate.</item>
-  <item>Refactor: gate delegates to spec-driven runGodotCheckGate over GODOT_CHECKS (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

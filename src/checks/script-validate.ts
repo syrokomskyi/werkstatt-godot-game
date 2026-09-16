@@ -1,11 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.script.validate — checks C# script conventions for Godot 4.x + C# projects (GODOT-08).</purpose>
-<keywords>validator, script, csharp, conventions, godot</keywords>
-<responsibilities>
-  <item>Validates that .cs files in Scripts/ follow Godot C# conventions.</item>
-  <item>Checks: class name matches file name, partial keyword on Node subclasses, using Godot; present.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not compile C# code — use dotnet build for that.</item>
   <item>Does not validate .csproj settings — that is csproj-validate's job.</item>
@@ -14,8 +11,9 @@
 <!-- risk: vault -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial C# script conventions validator — GODOT-08.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

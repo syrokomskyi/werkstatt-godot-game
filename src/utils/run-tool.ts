@@ -1,21 +1,21 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Single seam for synchronous subprocess invocation — binary resolution, output capture, error-line classification.</purpose>
-<keywords>subprocess, exec, tool, seam, godot</keywords>
-<responsibilities>
-  <item>Runs an external binary synchronously and returns merged stdout/stderr output.</item>
-  <item>Accepts an injected executor — production uses execFileSync, tests inject a fake.</item>
-  <item>Extracts prefixed lines (ERROR:, WARNING:) from tool output.</item>
-  <item>Resolves binary paths via `which`.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not manage long-running daemons — dev server and Xvfb use spawn directly.</item>
   <item>Does not interpret tool output beyond line classification — callers own semantics.</item>
 </non-goals>
 <!-- risk: publish -->
 </MODULE_CONTRACT>
+<KEY_DECISIONS>
+  <item>TODO: record current design decisions</item>
+</KEY_DECISIONS>
 <CHANGE_SUMMARY>
-  <item>Initial tool runner — extracted from smoke-test, playtest, screenshot, dotnet-build, dotnet-test, and deploy adapters (architecture review candidate #2).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

@@ -1,14 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Werkstatt Godot plugin entry point — Godot 4.x + C# stack implementing werkstatt/plugin@1.</purpose>
-<keywords>plugin, godot, csharp, game, werkstatt</keywords>
-<responsibilities>
-  <item>Exports werkstattGodotPlugin: WerkstattPlugin with profileId "godot-csharp".</item>
-  <item>Registers Godot-stack engine modules via moduleLoaders (checks).</item>
-  <item>Provides deploy adapters (itch-io, github-releases) and lifecycle hooks.</item>
-  <item>Declares Godot path conventions via StackPathConventions.</item>
-  <item>Registers dev module (godot.dev.server, godot.test) via moduleLoaders.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Do not implement engine logic — delegate to @warpgogol/werkstatt-engine.</item>
   <item>Do not import stack-specific dependencies into the engine package.</item>
@@ -16,11 +10,9 @@
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial Godot plugin entry point — Godot path conventions, check/onboarding module loaders, deploy adapters, lifecycle hooks, GODOT-01..04 invariants.</item>
-  <item>Fix: remove moduleLoaders.onboarding (no-op module deleted, scaffold handled via scaffoldProject hook).</item>
-  <item>Enhancement: add dev module (godot.dev.server, godot.test) via moduleLoaders. GODOT-01..07 invariants.</item>
-  <item>Enhancement: add script (GODOT-08), export-presets (GODOT-09), uid (GODOT-10), nuget (GODOT-11) validators. Add godot.smoke.test and godot.context.generate dev commands. GODOT-01..11 invariants.</item>
-  <item>Enhancement: add addon (GODOT-12) validator, godot.playtest and godot.screenshot dev commands, godot-mcp-bridge skill. Enhanced context.generate with addons, display settings. GODOT-01..12 invariants.</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

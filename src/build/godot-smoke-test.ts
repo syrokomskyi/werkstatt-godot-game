@@ -1,12 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.smoke.test — launches the Godot game headless for a few seconds to catch runtime errors that static validators cannot detect.</purpose>
-<keywords>smoke, test, headless, runtime, godot</keywords>
-<responsibilities>
-  <item>Runs godot --headless with a configurable timeout (default 10s).</item>
-  <item>Captures stdout/stderr and reports errors/warnings.</item>
-  <item>Returns exit code 1 if Godot crashes or outputs ERROR: lines.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not run unit tests — use godot.test (dotnet test) for that.</item>
   <item>Does not test visual output — headless mode has no rendering.</item>
@@ -14,8 +10,9 @@
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial headless smoke test command — godot.smoke.test.</item>
-  <item>Refactor: route godot run through runTool seam with injectable executor (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

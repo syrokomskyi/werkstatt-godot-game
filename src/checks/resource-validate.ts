@@ -1,16 +1,16 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.resource.validate — checks .tres files are in Resources/ and their res:// references exist (GODOT-07).</purpose>
-<keywords>validator, resource, tres, godot</keywords>
+
 <non-goals>
   <item>Does not modify files — read-only validator.</item>
   <item>Does not validate .tscn scene references — that is scene-reference-validate's job.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial resource validator — checks .tres files in Resources/ and res:// reference integrity.</item>
-  <item>Fix: use shared extractResReferences from utils/extract-res-references.ts instead of local duplicate.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

@@ -1,13 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>itch.io deploy adapter for the Godot plugin — supports multi-platform channels.</purpose>
-<keywords>deploy, itch-io, godot, multi-platform</keywords>
-<responsibilities>
-  <item>Deploys game build to itch.io using butler CLI.</item>
-  <item>Supports multi-platform channels: reads export_presets.cfg and pushes each platform to its own channel.</item>
-  <item>Credentials (itch.io API key) injected from channel config: deploy.itch.apiKey.</item>
-  <item>Never reads credentials from environment variables directly.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not build — build hook runs before deploy.</item>
   <item>Does not manage DNS or custom domains.</item>
@@ -16,12 +11,9 @@
 <!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial itch.io deploy adapter — butler push to itch.io.</item>
-  <item>Fix: import DeployResult from shared deploy/types.ts instead of defining locally.</item>
-  <item>Enhancement: multi-platform channel support — reads export_presets.cfg and pushes each platform to its own itch.io channel.</item>
-  <item>Fix: use shared parseExportPresets from utils/parse-export-presets.ts instead of local duplicate.</item>
-  <item>Fix: return multi-channel URLs in DeployResult.urls instead of overloading errors field.</item>
-  <item>Refactor: butler push via runTool seam with injectable executor (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

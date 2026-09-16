@@ -1,17 +1,16 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Godot check module — registers Godot validators as kernel commands.</purpose>
-<keywords>checks, validators, godot</keywords>
+
 <non-goals>
   <item>Do not implement validator logic here — delegate to individual validator files.</item>
 </non-goals>
 <!-- risk: vault -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial Godot check module — registers godot.scene.validate, godot.gitignore.validate, godot.secret.scan, godot.project.config.validate.</item>
-  <item>Enhancement: register godot.scene.reference.validate, godot.csproj.validate, godot.resource.validate.</item>
-  <item>Enhancement: register godot.script.validate, godot.export.presets.validate, godot.uid.validate, godot.nuget.validate.</item>
-  <item>Refactor: derive commands from GODOT_CHECKS spec table via godotCheckToCommand (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

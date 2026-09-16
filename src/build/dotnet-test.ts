@@ -1,19 +1,17 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Test hook for the Godot plugin — runs dotnet test for C# unit tests.</purpose>
-<keywords>test, dotnet, xunit, nunit, godot</keywords>
-<responsibilities>
-  <item>Runs `dotnet test` in the workpiece directory if test projects exist.</item>
-  <item>Reports success/failure via HookResult.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not build — that is the build hook's job.</item>
   <item>Does not run GdUnit4 tests — only dotnet test (xUnit/NUnit).</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial test hook — runs dotnet test for C# unit test integration.</item>
-  <item>Refactor: runTool seam; createTestCommand folded in from dev/module.ts (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

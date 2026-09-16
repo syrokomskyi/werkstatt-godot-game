@@ -1,18 +1,20 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Shared utility for extracting res:// references from Godot resource files.</purpose>
-<keywords>res, reference, godot, utility, scene, tres</keywords>
-<responsibilities>
-  <item>Extracts res:// paths from file content using regex.</item>
-  <item>Used by scene-reference-validate and resource-validate to avoid duplication.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not check file existence — caller handles existsSync.</item>
   <item>Does not parse Godot resource format semantically — only extracts res:// string paths.</item>
 </non-goals>
 </MODULE_CONTRACT>
+<KEY_DECISIONS>
+  <item>TODO: record current design decisions</item>
+</KEY_DECISIONS>
 <CHANGE_SUMMARY>
-  <item>Initial res:// reference extractor — extracted from scene-reference-validate and resource-validate to remove duplication.</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

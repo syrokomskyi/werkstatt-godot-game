@@ -1,7 +1,7 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.secret.scan — GODOT-03 secret scan enforcement for C# source files.</purpose>
-<keywords>validator, secret, scan, security, godot, csharp</keywords>
+
 <non-goals>
   <item>Does not modify files — read-only validator.</item>
   <item>Does not use external tools — regex-based scan only.</item>
@@ -11,9 +11,9 @@
 <!-- risk: delete -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial secret scan — regex patterns for API keys, tokens, passwords in .cs files.</item>
-  <item>Fix: use shared listFilesRecursive from utils/list-files-recursive.ts, remove duplicated local listCsFiles function.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

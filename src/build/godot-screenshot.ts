@@ -1,13 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.screenshot — captures a screenshot of the Godot game viewport using Xvfb + headless rendering.</purpose>
-<keywords>screenshot, xvfb, visual, regression, godot</keywords>
-<responsibilities>
-  <item>Launches Xvfb as a virtual display if no DISPLAY is set.</item>
-  <item>Runs godot --headless with --render-thread safe to capture a frame.</item>
-  <item>Saves the screenshot as PNG to a configurable output path.</item>
-  <item>Reports success/failure and the screenshot path.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not compare screenshots — visual regression comparison is a separate concern.</item>
   <item>Does not run the game for gameplay testing — use godot.playtest for that.</item>
@@ -15,8 +10,9 @@
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial screenshot command — godot.screenshot.</item>
-  <item>Refactor: route which/godot/xwd/convert through runTool/findBinary seam with injectable executor (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

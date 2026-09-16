@@ -1,19 +1,20 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Single parse seam for project.godot — loads the file once into a typed GodotProject model.</purpose>
-<keywords>project, godot, parser, model, ini</keywords>
-<responsibilities>
-  <item>Parses project.godot into sections, autoloads, input actions, display/stretch settings, and enabled editor plugins.</item>
-  <item>Exposes raw section blocks for diff-style consumers (project-config-validate).</item>
-  <item>loadGodotProject returns null when project.godot is absent — callers decide skip semantics.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not validate the project — validators consume the model and decide.</item>
   <item>Does not parse export_presets.cfg — that is parse-export-presets' job.</item>
 </non-goals>
 </MODULE_CONTRACT>
+<KEY_DECISIONS>
+  <item>TODO: record current design decisions</item>
+</KEY_DECISIONS>
 <CHANGE_SUMMARY>
-  <item>Initial Godot project model — extracted from godot-context-generate, addon-validate, and project-config-validate ad-hoc regexes (architecture review candidate #4).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

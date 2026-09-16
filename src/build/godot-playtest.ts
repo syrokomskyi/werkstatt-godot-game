@@ -1,13 +1,8 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.playtest — runs the Godot game for a configurable duration with deterministic input, catching runtime errors during gameplay (not just at startup).</purpose>
-<keywords>playtest, runtime, deterministic, input, godot</keywords>
-<responsibilities>
-  <item>Launches godot --headless with --quit-after for a configurable duration.</item>
-  <item>Optionally feeds deterministic input via --fixed-fps and input simulation scripts.</item>
-  <item>Captures stdout/stderr and reports ERROR/WARNING lines.</item>
-  <item>Distinguishes startup errors from gameplay errors by timestamp.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not capture screenshots — use godot.screenshot for that.</item>
   <item>Does not run unit tests — use godot.test for that.</item>
@@ -15,8 +10,9 @@
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial playtest command — godot.playtest.</item>
-  <item>Refactor: route godot run through runTool seam with injectable executor (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

@@ -1,19 +1,17 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Dev server hook for the Godot plugin — launches godot --editor for local development.</purpose>
-<keywords>dev, server, godot, editor</keywords>
-<responsibilities>
-  <item>Launches `godot --editor` in the workpiece directory as a non-blocking child process.</item>
-  <item>Returns HookResult with the process PID for external management.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not build — that is the build hook's job.</item>
   <item>Does not manage process lifecycle beyond launch — the caller handles shutdown.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial dev server hook — launches godot --editor for local development.</item>
-  <item>Refactor: createDevServerCommand folded in from dev/module.ts (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

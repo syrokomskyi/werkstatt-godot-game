@@ -1,20 +1,16 @@
 /*
 <MODULE_CONTRACT>
 <purpose>Godot check harness — shared violation/result types plus spec-to-command/gate/invariant machinery.</purpose>
-<keywords>checks, harness, spec, validators, godot</keywords>
-<responsibilities>
-  <item>Defines GodotViolation and GodotCheckData — the single result shape for all GODOT validators.</item>
-  <item>Defines GodotCheckSpec — one declarative entry per invariant (id, command, run, blocking, cacheable).</item>
-  <item>godotCheckToCommand wraps a spec's run() into a CommandDeclaration.</item>
-  <item>runGodotCheckGate executes all specs, honoring non-blocking specs as warnings.</item>
-  <item>godotInvariants derives StackInvariant[] from the spec table.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not implement validator logic — validators export run() functions consumed by specs.ts.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial check harness — collapses per-validator command factories, gate orchestration, and invariant table into one spec-driven module (architecture review candidates #1, #5).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 

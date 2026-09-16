@@ -1,20 +1,17 @@
 /*
 <MODULE_CONTRACT>
 <purpose>godot.uid.validate — checks UID uniqueness in .tscn and .tres files (GODOT-10).</purpose>
-<keywords>validator, uid, uniqueness, godot, scene, resource</keywords>
-<responsibilities>
-  <item>Scans .tscn and .tres files for uid="uid://..." declarations.</item>
-  <item>Reports duplicate UIDs — Godot loads the wrong resource when UIDs collide.</item>
-  <item>Reports missing UIDs — Godot generates them on first open, causing unnecessary diffs.</item>
-</responsibilities>
+
+
 <non-goals>
   <item>Does not validate res:// references — that is scene-reference-validate's job.</item>
   <item>Does not generate UIDs — use the Godot editor for that.</item>
 </non-goals>
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
-  <item>Initial UID uniqueness validator — GODOT-10.</item>
-  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
+  <item>RFC-1097: step 6 — compass.migrate codemod run
+
+Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
 </CHANGE_SUMMARY>
 */
 
