@@ -9,12 +9,15 @@
 </non-goals>
 </MODULE_CONTRACT>
 <KEY_DECISIONS>
-  <item>TODO: record current design decisions</item>
+  <item>project.godot is parsed once into a typed model — validators consume the model and never re-parse the file.</item>
 </KEY_DECISIONS>
 <CHANGE_SUMMARY>
   <item>RFC-1097: step 6 — compass.migrate codemod run
 
 Mechanical v1 to v2 header migration across the workspace: 942 files rewritten — CHANGE_SUMMARY windows collapsed into <history>, forbidden v1 blocks stripped, KEY_DECISIONS seeded from @ai-invariant comments (5 files) or TODO placeholders (103 files), blocks reordered to canonical order.</item>
+  <item>RFC-1097: sweep — tail packages clean
+
+Sweep batch 3: rewrote ~95 purposes across werkstatt-knowledge, werkstatt-shared, godot-game, phaser-game, lifecycle-core, projektarchiv-*, portal-*, billing-*, typescript (CONTRACT-02/PURPOSE-02). Real KEY_DECISIONS on 5 godot utils, non-goals on 5 CONTRACT-03 files, headers on 4 headerless files, CS-07 history literal fix on 2 files. Policy: vitest.config.ts + test-fixtures testPatterns, worker-configuration.d.ts excludedPath. All non-site/engine packages now 0 diagnostics.</item>
 </CHANGE_SUMMARY>
 */
 
@@ -56,12 +59,9 @@ export function parseGodotProject(content: string): GodotProject {
     inputActions.push(match[1]!);
   }
 
-  const renderer =
-    content.match(/^rendering\/renderer\/rendering_method="([^"]+)"/m)?.[1] ?? null;
-  const stretchMode =
-    content.match(/^display\/window\/stretch\/mode="([^"]+)"/m)?.[1] ?? null;
-  const stretchAspect =
-    content.match(/^display\/window\/stretch\/aspect="([^"]+)"/m)?.[1] ?? null;
+  const renderer = content.match(/^rendering\/renderer\/rendering_method="([^"]+)"/m)?.[1] ?? null;
+  const stretchMode = content.match(/^display\/window\/stretch\/mode="([^"]+)"/m)?.[1] ?? null;
+  const stretchAspect = content.match(/^display\/window\/stretch\/aspect="([^"]+)"/m)?.[1] ?? null;
 
   const widthMatch = content.match(/^display\/window\/size\/viewport_width=(\d+)/m);
   const heightMatch = content.match(/^display\/window\/size\/viewport_height=(\d+)/m);
@@ -70,9 +70,7 @@ export function parseGodotProject(content: string): GodotProject {
 
   const editorPlugins = sections.get("[editor_plugins]") ?? "";
   const enabledLine = editorPlugins.match(/^enabled=(.*)$/m)?.[1] ?? "";
-  const enabledPlugins = [...enabledLine.matchAll(/"(res:\/\/addons\/[^"]+)"/g)].map(
-    (m) => m[1]!,
-  );
+  const enabledPlugins = [...enabledLine.matchAll(/"(res:\/\/addons\/[^"]+)"/g)].map((m) => m[1]!);
 
   return {
     raw: content,
