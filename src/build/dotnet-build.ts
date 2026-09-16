@@ -12,21 +12,26 @@
   <item>Does not run checkGate — that is a separate hook.</item>
   <item>Does not install Godot or dotnet — both must be on PATH.</item>
 </non-goals>
+<!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial dotnet build hook — runs dotnet build via child_process.</item>
   <item>Enhancement: add Godot export step — reads export_presets.cfg and runs godot --headless --export-release for each preset.</item>
   <item>Fix: use shared parseExportPresets from utils/parse-export-presets.ts instead of local duplicate.</item>
+  <item>Refactor: route dotnet/godot subprocess calls through runTool seam with injectable executor (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
-import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-shared/plugin";
 import { parseExportPresets } from "../utils/parse-export-presets.ts";
+import { runTool, type ToolExecutor } from "../utils/run-tool.ts";
 
-export async function runDotnetBuild(ctx: PluginHookContext): Promise<HookResult> {
+export async function runDotnetBuild(
+  ctx: PluginHookContext,
+  executor?: ToolExecutor,
+): Promise<HookResult> {
   const cwd = ctx.workpiecePath ?? ctx.workspaceRoot;
   const csprojPath = join(cwd, "Game.csproj");
 
@@ -39,22 +44,22 @@ export async function runDotnetBuild(ctx: PluginHookContext): Promise<HookResult
 
   ctx.logger.info(`dotnet-build: running dotnet build in ${cwd}`);
 
-  try {
-    const output = execFileSync("dotnet", ["build", "./Game.csproj"], {
-      cwd,
-      encoding: "utf-8",
-      timeout: 180_000,
-      stdio: ["pipe", "pipe", "pipe"],
-    });
-    ctx.logger.info("dotnet-build: build completed", { output: output.slice(-200) });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
+  const buildResult = runTool("dotnet", ["build", "./Game.csproj"], {
+    cwd,
+    timeoutMs: 180_000,
+  }, executor);
+
+  if (!buildResult.ok) {
+    const message = buildResult.output.slice(-500);
     ctx.logger.error("dotnet-build: build failed", { error: message });
     return {
       success: false,
       errors: [`dotnet build failed: ${message}`],
     };
   }
+  ctx.logger.info("dotnet-build: build completed", {
+    output: buildResult.output.slice(-200),
+  });
 
   const presetsPath = join(cwd, "export_presets.cfg");
   if (!existsSync(presetsPath)) {
@@ -72,22 +77,18 @@ export async function runDotnetBuild(ctx: PluginHookContext): Promise<HookResult
   for (const preset of presets) {
     ctx.logger.info(`dotnet-build: exporting preset "${preset.name}" (${preset.platform})`);
 
-    try {
-      const exportOutput = execFileSync(
-        "godot",
-        ["--headless", "--export-release", preset.name, preset.exportPath],
-        {
-          cwd,
-          encoding: "utf-8",
-          timeout: 300_000,
-          stdio: ["pipe", "pipe", "pipe"],
-        },
-      );
+    const exportResult = runTool(
+      "godot",
+      ["--headless", "--export-release", preset.name, preset.exportPath],
+      { cwd, timeoutMs: 300_000 },
+      executor,
+    );
+    if (exportResult.ok) {
       ctx.logger.info(`dotnet-build: export "${preset.name}" completed`, {
-        output: exportOutput.slice(-200),
+        output: exportResult.output.slice(-200),
       });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+    } else {
+      const message = exportResult.output.slice(-500);
       ctx.logger.error(`dotnet-build: export "${preset.name}" failed`, { error: message });
       exportErrors.push(`Godot export failed for preset "${preset.name}": ${message}`);
     }

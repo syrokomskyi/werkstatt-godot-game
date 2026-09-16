@@ -12,6 +12,7 @@
   <item>Does not manage long-running daemons — dev server and Xvfb use spawn directly.</item>
   <item>Does not interpret tool output beyond line classification — callers own semantics.</item>
 </non-goals>
+<!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial tool runner — extracted from smoke-test, playtest, screenshot, dotnet-build, dotnet-test, and deploy adapters (architecture review candidate #2).</item>

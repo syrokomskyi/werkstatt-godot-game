@@ -11,33 +11,25 @@
   <item>Does not validate .csproj settings — that is csproj-validate's job.</item>
   <item>Does not check for secrets — that is secret-scan's job.</item>
 </non-goals>
+<!-- risk: vault -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial C# script conventions validator — GODOT-08.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { basename, relative } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface ScriptValidateViolation {
-  ruleId: string;
-  file: string;
-  message: string;
-}
-
-export interface ScriptValidateData {
-  command: string;
+export interface ScriptValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: ScriptValidateViolation[];
 }
 
-const SKIP_DIRS = ["bin", "obj", ".godot", ".git", "node_modules"];
 const GODOT_NODE_BASE_CLASSES = [
   "Node",
   "Node2D",
@@ -77,8 +69,8 @@ const GODOT_NODE_BASE_CLASSES = [
 export async function validateScripts(
   projectRoot: string,
 ): Promise<KernelCommandResult<ScriptValidateData>> {
-  const violations: ScriptValidateViolation[] = [];
-  const csFiles = await listFilesRecursive(projectRoot, ".cs", SKIP_DIRS);
+  const violations: GodotViolation[] = [];
+  const csFiles = await listFilesRecursive(projectRoot, ".cs", GODOT_SKIP_DIRS);
 
   for (const csFile of csFiles) {
     const relPath = relative(projectRoot, csFile);
@@ -137,19 +129,5 @@ export async function validateScripts(
     },
     exitCode: violations.length === 0 ? 0 : 1,
     summary: `godot.script.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
-  };
-}
-
-export function createScriptValidateCommand(): KernelCommandDefinition<ScriptValidateData> {
-  return {
-    name: "godot.script.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate C# script conventions (class name, partial, using Godot)",
-    scope: "workspace",
-    cacheable: true,
-    async execute(_input, context) {
-      return validateScripts(context.workspaceRoot);
-    },
   };
 }

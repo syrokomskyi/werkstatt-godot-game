@@ -13,6 +13,7 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial dev server hook — launches godot --editor for local development.</item>
+  <item>Refactor: createDevServerCommand folded in from dev/module.ts (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
@@ -20,6 +21,16 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-shared/plugin";
+import type {
+  KernelCommandDefinition,
+  KernelCommandResult,
+} from "@warpgogol/werkstatt-engine/kernel/types";
+
+export interface DevServerData {
+  command: string;
+  status: "pass" | "fail";
+  pid?: number;
+}
 
 export async function runGodotDevServer(ctx: PluginHookContext): Promise<HookResult> {
   const cwd = ctx.workpiecePath ?? ctx.workspaceRoot;
@@ -62,4 +73,30 @@ export async function runGodotDevServer(ctx: PluginHookContext): Promise<HookRes
       errors: [`dev-server failed: ${message}`],
     };
   }
+}
+
+export function createDevServerCommand(): KernelCommandDefinition<DevServerData> {
+  return {
+    name: "godot.dev.server",
+    description: "Launch godot --editor for local development",
+    scope: "workspace",
+    cacheable: false,
+    async execute(_input, context) {
+      const result = await runGodotDevServer(context);
+      const pid =
+        typeof result.data === "object" && result.data !== null && "pid" in result.data
+          ? (result.data as { pid?: number }).pid
+          : undefined;
+      const data: DevServerData = {
+        command: "godot.dev.server",
+        status: result.success ? "pass" : "fail",
+        pid,
+      };
+      return {
+        data,
+        exitCode: result.success ? 0 : 1,
+        summary: `godot.dev.server: ${data.status}`,
+      } satisfies KernelCommandResult<DevServerData>;
+    },
+  };
 }

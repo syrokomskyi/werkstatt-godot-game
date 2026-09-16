@@ -11,29 +11,22 @@
   <item>Does not validate csproj SDK settings — that is csproj-validate's job.</item>
   <item>Does not restore packages — use dotnet restore for that.</item>
 </non-goals>
+<!-- risk: delete -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial NuGet packages validator — GODOT-11.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface NugetValidateViolation {
-  ruleId: string;
-  message: string;
-}
-
-export interface NugetValidateData {
-  command: string;
+export interface NugetValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: NugetValidateViolation[];
 }
 
 const GAME_CSPROJ = "Game.csproj";
@@ -60,7 +53,7 @@ const NON_GAME_PACKAGES: Record<string, string> = {
 export async function validateNuget(
   projectRoot: string,
 ): Promise<KernelCommandResult<NugetValidateData>> {
-  const violations: NugetValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
   const csprojPath = join(projectRoot, GAME_CSPROJ);
 
   if (!existsSync(csprojPath)) {
@@ -124,19 +117,5 @@ export async function validateNuget(
     },
     exitCode: violations.length === 0 ? 0 : 1,
     summary: `godot.nuget.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
-  };
-}
-
-export function createNugetValidateCommand(): KernelCommandDefinition<NugetValidateData> {
-  return {
-    name: "godot.nuget.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate NuGet package references in Game.csproj (GODOT-11)",
-    scope: "workspace",
-    cacheable: true,
-    async execute(_input, context) {
-      return validateNuget(context.workspaceRoot);
-    },
   };
 }

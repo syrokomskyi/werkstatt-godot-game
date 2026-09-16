@@ -10,39 +10,28 @@
 <CHANGE_SUMMARY>
   <item>Initial scene reference validator — parses .tscn files for res:// paths and checks existence.</item>
   <item>Fix: use shared extractResReferences from utils/extract-res-references.ts instead of local duplicate.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, relative } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
 import { extractResReferences } from "../utils/extract-res-references.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface SceneReferenceViolation {
-  ruleId: string;
-  file: string;
-  reference: string;
-  message: string;
-}
-
-export interface SceneReferenceValidateData {
-  command: string;
+export interface SceneReferenceValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: SceneReferenceViolation[];
 }
-
-const SKIP_DIRS = ["bin", "obj", ".godot", ".git", "node_modules"];
 
 export async function validateSceneReferences(
   projectRoot: string,
 ): Promise<KernelCommandResult<SceneReferenceValidateData>> {
-  const violations: SceneReferenceViolation[] = [];
-  const tscnFiles = await listFilesRecursive(projectRoot, ".tscn", SKIP_DIRS);
+  const violations: GodotViolation[] = [];
+  const tscnFiles = await listFilesRecursive(projectRoot, ".tscn", GODOT_SKIP_DIRS);
 
   for (const tscnFile of tscnFiles) {
     const content = await readFile(tscnFile, "utf-8");
@@ -68,19 +57,5 @@ export async function validateSceneReferences(
     data: { command: "godot.scene.reference.validate", status, violations },
     exitCode: status === "pass" ? 0 : 1,
     summary: `godot.scene.reference.validate: ${status} (${violations.length} violations)`,
-  };
-}
-
-export function createSceneReferenceValidateCommand(): KernelCommandDefinition<SceneReferenceValidateData> {
-  return {
-    name: "godot.scene.reference.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate scene res:// references exist (GODOT-05)",
-    scope: "workspace",
-    cacheable: false,
-    async execute(_input, context) {
-      return validateSceneReferences(context.workspaceRoot);
-    },
   };
 }

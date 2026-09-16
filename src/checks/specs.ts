@@ -9,6 +9,7 @@
   <item>Does not implement validator logic — imports run() functions from validator modules.</item>
   <item>Does not register commands — module.ts maps specs via godotCheckToCommand.</item>
 </non-goals>
+<!-- risk: vault -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial spec table — replaces 12 hand-wired command factories, gate call sites, and the invariant table (architecture review candidate #1).</item>
@@ -65,8 +66,7 @@ export const GODOT_CHECKS: readonly GodotCheckSpec[] = [
     id: "GODOT-04",
     command: "godot.project.config.validate",
     description: "Validate project.godot sensitive field changes vs git HEAD (GODOT-04)",
-    invariant:
-      "project.godot autoloads and input map changes require explicit confirmation",
+    invariant: "project.godot autoloads and input map changes require explicit confirmation",
     blocking: false,
     cacheable: false,
     run: validateProjectConfig,
@@ -84,8 +84,7 @@ export const GODOT_CHECKS: readonly GodotCheckSpec[] = [
     id: "GODOT-06",
     command: "godot.csproj.validate",
     description: "Validate Game.csproj Godot C# settings (GODOT-06)",
-    invariant:
-      "Game.csproj must use Godot.NET.Sdk, target net8.0, and enable dynamic loading",
+    invariant: "Game.csproj must use Godot.NET.Sdk, target net8.0, and enable dynamic loading",
     blocking: true,
     cacheable: false,
     run: validateCsproj,
@@ -114,8 +113,7 @@ export const GODOT_CHECKS: readonly GodotCheckSpec[] = [
     id: "GODOT-10",
     command: "godot.uid.validate",
     description: "Validate UID uniqueness in .tscn and .tres files (GODOT-10)",
-    invariant:
-      "Scene (.tscn) and resource (.tres) files must have unique uid:// declarations",
+    invariant: "Scene (.tscn) and resource (.tres) files must have unique uid:// declarations",
     blocking: true,
     cacheable: true,
     run: validateUids,
@@ -134,8 +132,7 @@ export const GODOT_CHECKS: readonly GodotCheckSpec[] = [
     id: "GODOT-11",
     command: "godot.nuget.validate",
     description: "Validate NuGet package references in Game.csproj (GODOT-11)",
-    invariant:
-      "Game.csproj NuGet package references must be Godot-compatible and non-problematic",
+    invariant: "Game.csproj NuGet package references must be Godot-compatible and non-problematic",
     blocking: true,
     cacheable: true,
     run: validateNuget,

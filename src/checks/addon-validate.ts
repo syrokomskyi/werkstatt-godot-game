@@ -13,42 +13,34 @@
   <item>Does not install or remove addons.</item>
   <item>Does not validate addon functionality — only structural presence.</item>
 </non-goals>
+<!-- risk: delete -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial addon validator — GODOT-12.</item>
+  <item>Refactor: shared types; enabled-plugin check via loadGodotProject model; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { existsSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
+import { loadGodotProject } from "../utils/godot-project.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface AddonValidateViolation {
-  ruleId: string;
-  addon: string;
-  message: string;
-}
-
-export interface AddonValidateData {
-  command: string;
+export interface AddonValidateData extends GodotCheckData {
   status: "pass" | "fail";
   addons: { name: string; enabled: boolean; hasPluginCfg: boolean; hasCsproj: boolean }[];
-  violations: AddonValidateViolation[];
 }
 
 const ADDONS_DIR = "addons";
 const PLUGIN_CFG = "plugin.cfg";
-const PROJECT_GODOT = "project.godot";
 const GAME_CSPROJ = "Game.csproj";
 
 export async function validateAddons(
   projectRoot: string,
 ): Promise<KernelCommandResult<AddonValidateData>> {
-  const violations: AddonValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
   const addonsDir = join(projectRoot, ADDONS_DIR);
 
   if (!existsSync(addonsDir)) {
@@ -64,12 +56,9 @@ export async function validateAddons(
     };
   }
 
-  // Read project.godot to find enabled plugins
-  const projectGodotPath = join(projectRoot, PROJECT_GODOT);
-  let projectGodotContent = "";
-  if (existsSync(projectGodotPath)) {
-    projectGodotContent = await readFile(projectGodotPath, "utf-8");
-  }
+  // Read project.godot via the shared parse seam to find enabled plugins
+  const project = await loadGodotProject(projectRoot);
+  const enabledPlugins = project?.enabledPlugins ?? [];
 
   // Read Game.csproj for NuGet dependency check
   const csprojPath = join(projectRoot, GAME_CSPROJ);
@@ -93,12 +82,8 @@ export async function validateAddons(
     const hasPluginCfg = existsSync(pluginCfgPath);
     const hasCsproj = existsSync(addonCsprojPath);
 
-    // Check if addon is enabled in project.godot
-    const enabledPattern = new RegExp(
-      `^\\[editor_plugins\\][^[]*enabled=.*"res://addons/${addonName}"`,
-      "ms",
-    );
-    const enabled = enabledPattern.test(projectGodotContent);
+    // Check if addon is enabled in project.godot [editor_plugins] enabled=
+    const enabled = enabledPlugins.includes(`res://addons/${addonName}`);
 
     addons.push({ name: addonName, enabled, hasPluginCfg, hasCsproj });
 
@@ -157,19 +142,5 @@ export async function validateAddons(
     },
     exitCode: violations.length === 0 ? 0 : 1,
     summary: `godot.addon.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`} (${addons.length} addon(s))`,
-  };
-}
-
-export function createAddonValidateCommand(): KernelCommandDefinition<AddonValidateData> {
-  return {
-    name: "godot.addon.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate Godot addons in addons/ directory (GODOT-12)",
-    scope: "workspace",
-    cacheable: true,
-    async execute(_input, context) {
-      return validateAddons(context.workspaceRoot);
-    },
   };
 }

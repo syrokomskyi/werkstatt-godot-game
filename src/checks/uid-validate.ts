@@ -14,40 +14,31 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial UID uniqueness validator — GODOT-10.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { relative } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface UidValidateViolation {
-  ruleId: string;
-  file: string;
-  message: string;
-}
-
-export interface UidValidateData {
-  command: string;
+export interface UidValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: UidValidateViolation[];
 }
 
-const SKIP_DIRS = ["bin", "obj", ".godot", ".git", "node_modules"];
 const UID_PATTERN = /uid="uid:\/\/([^"]+)"/;
 
 export async function validateUids(
   projectRoot: string,
 ): Promise<KernelCommandResult<UidValidateData>> {
-  const violations: UidValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
   const uidMap = new Map<string, string>(); // uid -> first file seen
 
-  const tscnFiles = await listFilesRecursive(projectRoot, ".tscn", SKIP_DIRS);
-  const tresFiles = await listFilesRecursive(projectRoot, ".tres", SKIP_DIRS);
+  const tscnFiles = await listFilesRecursive(projectRoot, ".tscn", GODOT_SKIP_DIRS);
+  const tresFiles = await listFilesRecursive(projectRoot, ".tres", GODOT_SKIP_DIRS);
   const allFiles = [...tscnFiles, ...tresFiles];
 
   for (const file of allFiles) {
@@ -86,19 +77,5 @@ export async function validateUids(
     },
     exitCode: violations.length === 0 ? 0 : 1,
     summary: `godot.uid.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
-  };
-}
-
-export function createUidValidateCommand(): KernelCommandDefinition<UidValidateData> {
-  return {
-    name: "godot.uid.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate UID uniqueness in .tscn and .tres files (GODOT-10)",
-    scope: "workspace",
-    cacheable: true,
-    async execute(_input, context) {
-      return validateUids(context.workspaceRoot);
-    },
   };
 }

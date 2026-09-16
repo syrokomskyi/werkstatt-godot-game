@@ -11,31 +11,24 @@
   <item>Does not run Godot export — that is the build hook's job.</item>
   <item>Does not validate deploy channel mapping — that is the deploy adapter's job.</item>
 </non-goals>
+<!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial export presets validator — GODOT-09.</item>
   <item>Fix: change [preset_N] to [preset.N] (Godot 4.x dot notation) — pre-existing regex bug exposed by scaffolded export_presets.cfg.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
 import { parseExportPresets } from "../utils/parse-export-presets.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface ExportPresetsValidateViolation {
-  ruleId: string;
-  message: string;
-}
-
-export interface ExportPresetsValidateData {
-  command: string;
+export interface ExportPresetsValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: ExportPresetsValidateViolation[];
 }
 
 const EXPORT_PRESETS_FILE = "export_presets.cfg";
@@ -43,7 +36,7 @@ const EXPORT_PRESETS_FILE = "export_presets.cfg";
 export async function validateExportPresets(
   projectRoot: string,
 ): Promise<KernelCommandResult<ExportPresetsValidateData>> {
-  const violations: ExportPresetsValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
   const presetsPath = join(projectRoot, EXPORT_PRESETS_FILE);
 
   if (!existsSync(presetsPath)) {
@@ -132,19 +125,5 @@ export async function validateExportPresets(
     },
     exitCode: violations.length === 0 ? 0 : 1,
     summary: `godot.export.presets.validate: ${violations.length === 0 ? "pass" : `${violations.length} violation${violations.length === 1 ? "" : "s"}`}`,
-  };
-}
-
-export function createExportPresetsValidateCommand(): KernelCommandDefinition<ExportPresetsValidateData> {
-  return {
-    name: "godot.export.presets.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate export_presets.cfg for common misconfigurations (GODOT-09)",
-    scope: "workspace",
-    cacheable: true,
-    async execute(_input, context) {
-      return validateExportPresets(context.workspaceRoot);
-    },
   };
 }

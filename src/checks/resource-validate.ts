@@ -10,39 +10,30 @@
 <CHANGE_SUMMARY>
   <item>Initial resource validator — checks .tres files in Resources/ and res:// reference integrity.</item>
   <item>Fix: use shared extractResReferences from utils/extract-res-references.ts instead of local duplicate.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, relative } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
 import { extractResReferences } from "../utils/extract-res-references.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface ResourceValidateViolation {
-  ruleId: string;
-  file: string;
-  message: string;
-}
-
-export interface ResourceValidateData {
-  command: string;
+export interface ResourceValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: ResourceValidateViolation[];
 }
 
 const RESOURCES_DIR = "Resources";
-const SKIP_DIRS = ["bin", "obj", ".godot", ".git", "node_modules"];
 
 export async function validateResources(
   projectRoot: string,
 ): Promise<KernelCommandResult<ResourceValidateData>> {
-  const violations: ResourceValidateViolation[] = [];
-  const tresFiles = await listFilesRecursive(projectRoot, ".tres", SKIP_DIRS);
+  const violations: GodotViolation[] = [];
+  const tresFiles = await listFilesRecursive(projectRoot, ".tres", GODOT_SKIP_DIRS);
 
   for (const tresFile of tresFiles) {
     const relPath = relative(projectRoot, tresFile);
@@ -76,19 +67,5 @@ export async function validateResources(
     data: { command: "godot.resource.validate", status, violations },
     exitCode: status === "pass" ? 0 : 1,
     summary: `godot.resource.validate: ${status} (${violations.length} violations)`,
-  };
-}
-
-export function createResourceValidateCommand(): KernelCommandDefinition<ResourceValidateData> {
-  return {
-    name: "godot.resource.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate .tres resource location and references (GODOT-07)",
-    scope: "workspace",
-    cacheable: false,
-    async execute(_input, context) {
-      return validateResources(context.workspaceRoot);
-    },
   };
 }

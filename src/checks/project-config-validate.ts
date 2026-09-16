@@ -15,27 +15,19 @@
 <CHANGE_SUMMARY>
   <item>Fix: make GODOT-04 warning-only (exitCode 0 always) to match described severity. Document presence-based limitation.</item>
   <item>Enhancement: diff sensitive sections against git HEAD instead of presence check — eliminates false-positives on new projects.</item>
+  <item>Refactor: shared types; git HEAD read via runTool seam; extractSection from utils/godot-project (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
-import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
+import { runTool } from "../utils/run-tool.ts";
+import { extractSection } from "../utils/godot-project.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface ProjectConfigValidateViolation {
-  ruleId: string;
-  file: string;
-  message: string;
-}
-
-export interface ProjectConfigValidateData {
-  command: string;
+export interface ProjectConfigValidateData extends GodotCheckData {
   status: "pass" | "warn";
-  violations: ProjectConfigValidateViolation[];
 }
 
 const PROJECT_GODOT = "project.godot";
@@ -45,7 +37,7 @@ const SENSITIVE_SECTIONS = ["[autoload]", "[input]", "[layer_names]", "[renderin
 export async function validateProjectConfig(
   projectRoot: string,
 ): Promise<KernelCommandResult<ProjectConfigValidateData>> {
-  const violations: ProjectConfigValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
 
   let currentContent: string;
   try {
@@ -90,51 +82,9 @@ export async function validateProjectConfig(
 }
 
 function readGitHeadProjectGodot(projectRoot: string): string | null {
-  try {
-    const output = execFileSync("git", ["show", "HEAD:project.godot"], {
-      cwd: projectRoot,
-      encoding: "utf-8",
-      timeout: 10_000,
-      stdio: ["pipe", "pipe", "pipe"],
-    });
-    return output;
-  } catch {
-    return null;
-  }
-}
-
-function extractSection(content: string, sectionHeader: string): string {
-  const lines = content.split("\n");
-  const sectionLines: string[] = [];
-  let inSection = false;
-
-  for (const line of lines) {
-    if (line.trim() === sectionHeader) {
-      inSection = true;
-      sectionLines.push(line);
-      continue;
-    }
-    if (inSection) {
-      if (line.startsWith("[") && line.trim().endsWith("]")) {
-        break;
-      }
-      sectionLines.push(line);
-    }
-  }
-
-  return sectionLines.join("\n");
-}
-
-export function createProjectConfigValidateCommand(): KernelCommandDefinition<ProjectConfigValidateData> {
-  return {
-    name: "godot.project.config.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate project.godot sensitive field changes vs git HEAD (GODOT-04)",
-    scope: "workspace",
-    cacheable: false,
-    async execute(_input, context) {
-      return validateProjectConfig(context.workspaceRoot);
-    },
-  };
+  const result = runTool("git", ["show", "HEAD:project.godot"], {
+    cwd: projectRoot,
+    timeoutMs: 10_000,
+  });
+  return result.ok ? result.output : null;
 }

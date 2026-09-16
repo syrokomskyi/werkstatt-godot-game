@@ -16,16 +16,22 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial screenshot command — godot.screenshot.</item>
+  <item>Refactor: route which/godot/xwd/convert through runTool/findBinary seam with injectable executor (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
-import { execFileSync, execSync, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
 } from "@warpgogol/werkstatt-engine/kernel/types";
+import {
+  runTool,
+  findBinary,
+  type ToolExecutor,
+} from "../utils/run-tool.ts";
 
 export interface ScreenshotData {
   command: string;
@@ -41,29 +47,12 @@ const DEFAULT_WIDTH = 1280;
 const DEFAULT_HEIGHT = 720;
 const DEFAULT_OUTPUT_DIR = "screenshots";
 
-function findXvfb(): string | null {
-  try {
-    const path = execSync("which Xvfb", { encoding: "utf-8" }).trim();
-    return path || null;
-  } catch {
-    return null;
-  }
-}
-
-function findGodot(): string | null {
-  try {
-    const path = execSync("which godot", { encoding: "utf-8" }).trim();
-    return path || null;
-  } catch {
-    return null;
-  }
-}
-
 export function captureScreenshot(
   projectRoot: string,
   outputPath?: string,
   width: number = DEFAULT_WIDTH,
   height: number = DEFAULT_HEIGHT,
+  executor?: ToolExecutor,
 ): KernelCommandResult<ScreenshotData> {
   const projectGodot = join(projectRoot, "project.godot");
 
@@ -83,7 +72,7 @@ export function captureScreenshot(
     };
   }
 
-  const godotBin = findGodot();
+  const godotBin = findBinary("godot", executor);
   if (!godotBin) {
     return {
       data: {
@@ -108,7 +97,7 @@ export function captureScreenshot(
   let xvfbChild: ReturnType<typeof import("node:child_process").spawn> | null = null;
 
   if (!display) {
-    const xvfbBin = findXvfb();
+    const xvfbBin = findBinary("Xvfb", executor);
     if (!xvfbBin) {
       return {
         data: {
@@ -136,64 +125,56 @@ export function captureScreenshot(
     ], { stdio: "ignore" });
 
     // Give Xvfb a moment to start
-    execSync("sleep 1");
+    runTool("sleep", ["1"], { cwd: projectRoot, timeoutMs: 5_000 }, executor);
   }
 
   const errors: string[] = [];
   let success = false;
 
-  try {
-    const env = { ...process.env, DISPLAY: display! };
-    const args = [
-      "--headless",
-      "--render-thread",
-      "safe",
-      "--quit-after",
-      "60",
-    ];
+  const env = { ...process.env, DISPLAY: display! };
+  const godotResult = runTool(
+    godotBin,
+    ["--headless", "--render-thread", "safe", "--quit-after", "60"],
+    { cwd: projectRoot, timeoutMs: 30_000, env },
+    executor,
+  );
 
-    execFileSync(godotBin, args, {
-      cwd: projectRoot,
-      encoding: "utf-8",
-      timeout: 30_000,
-      env,
-      stdio: ["pipe", "pipe", "pipe"],
-    });
-
+  if (!godotResult.ok) {
+    errors.push(`Screenshot capture failed: ${godotResult.output.slice(-300)}`);
+  } else if (display && xvfbChild) {
     // Godot doesn't have a direct --screenshot flag in headless mode,
     // but the rendering output can be captured via OS-level tools.
     // For now, we use import_strategy: run the game briefly and capture via xwd.
     // This is a best-effort approach.
-    if (display && xvfbChild) {
-      try {
-        execSync(
-          `xwd -root -display ${display} -out ${finalOutputPath}.xwd`,
-          { encoding: "utf-8", timeout: 5_000, env },
-        );
-        // Convert xwd to png if ImageMagick is available
-        try {
-          execSync(`convert ${finalOutputPath}.xwd ${finalOutputPath}`, {
-            encoding: "utf-8",
-            timeout: 5_000,
-          });
-          success = existsSync(finalOutputPath);
-        } catch {
-          errors.push("ImageMagick 'convert' not available — screenshot saved as .xwd only");
-          success = existsSync(`${finalOutputPath}.xwd`);
-        }
-      } catch {
-        errors.push("xwd capture failed — no screenshot saved");
-      }
+    const xwdResult = runTool(
+      "xwd",
+      ["-root", "-display", display, "-out", `${finalOutputPath}.xwd`],
+      { cwd: projectRoot, timeoutMs: 5_000, env },
+      executor,
+    );
+    if (!xwdResult.ok) {
+      errors.push("xwd capture failed — no screenshot saved");
     } else {
-      errors.push("Screenshot capture requires Xvfb in headless environments");
+      // Convert xwd to png if ImageMagick is available
+      const convertResult = runTool(
+        "convert",
+        [`${finalOutputPath}.xwd`, finalOutputPath],
+        { cwd: projectRoot, timeoutMs: 5_000 },
+        executor,
+      );
+      if (convertResult.ok) {
+        success = existsSync(finalOutputPath);
+      } else {
+        errors.push("ImageMagick 'convert' not available — screenshot saved as .xwd only");
+        success = existsSync(`${finalOutputPath}.xwd`);
+      }
     }
-  } catch (err) {
-    const error = err as { message: string };
-    errors.push(`Screenshot capture failed: ${error.message}`);
-  } finally {
-    if (xvfbChild) {
-      xvfbChild.kill("SIGTERM");
-    }
+  } else {
+    errors.push("Screenshot capture requires Xvfb in headless environments");
+  }
+
+  if (xvfbChild) {
+    xvfbChild.kill("SIGTERM");
   }
 
   const status = success ? "pass" : "fail";

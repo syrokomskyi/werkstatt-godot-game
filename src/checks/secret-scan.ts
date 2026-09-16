@@ -6,32 +6,26 @@
   <item>Does not modify files — read-only validator.</item>
   <item>Does not use external tools — regex-based scan only.</item>
 </non-goals>
+<!-- risk: crypto -->
+<!-- risk: vault -->
+<!-- risk: delete -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial secret scan — regex patterns for API keys, tokens, passwords in .cs files.</item>
   <item>Fix: use shared listFilesRecursive from utils/list-files-recursive.ts, remove duplicated local listCsFiles function.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types + canonical GODOT_SKIP_DIRS; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { relative } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface SecretScanViolation {
-  ruleId: string;
-  file: string;
-  line: number;
-  message: string;
-}
-
-export interface SecretScanData {
-  command: string;
+export interface SecretScanData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: SecretScanViolation[];
 }
 
 const SECRET_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
@@ -64,14 +58,8 @@ const SECRET_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
 export async function scanSecrets(
   projectRoot: string,
 ): Promise<KernelCommandResult<SecretScanData>> {
-  const violations: SecretScanViolation[] = [];
-  const allCsFiles = await listFilesRecursive(projectRoot, ".cs", [
-    "bin",
-    "obj",
-    ".godot",
-    ".git",
-    "node_modules",
-  ]);
+  const violations: GodotViolation[] = [];
+  const allCsFiles = await listFilesRecursive(projectRoot, ".cs", GODOT_SKIP_DIRS);
   const csFiles = allCsFiles.filter((f) => !f.endsWith(".g.cs"));
 
   for (const filePath of csFiles) {
@@ -104,17 +92,5 @@ export async function scanSecrets(
     data: { command: "godot.secret.scan", status, violations },
     exitCode: status === "pass" ? 0 : 1,
     summary: `godot.secret.scan: ${status} (${violations.length} violations)`,
-  };
-}
-
-export function createSecretScanCommand(): KernelCommandDefinition<SecretScanData> {
-  return {
-    name: "godot.secret.scan",
-    description: "Scan C# source for hardcoded secrets (GODOT-03)",
-    scope: "workspace",
-    cacheable: false,
-    async execute(_input, context) {
-      return scanSecrets(context.workspaceRoot);
-    },
   };
 }

@@ -9,27 +9,18 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial csproj validator — checks Godot.NET.Sdk, TargetFramework net8.0+, EnableDynamicLoading.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface CsprojValidateViolation {
-  ruleId: string;
-  file: string;
-  message: string;
-}
-
-export interface CsprojValidateData {
-  command: string;
+export interface CsprojValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: CsprojValidateViolation[];
 }
 
 const GAME_CSPROJ = "Game.csproj";
@@ -37,7 +28,7 @@ const GAME_CSPROJ = "Game.csproj";
 export async function validateCsproj(
   projectRoot: string,
 ): Promise<KernelCommandResult<CsprojValidateData>> {
-  const violations: CsprojValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
 
   let content: string;
   try {
@@ -100,19 +91,5 @@ export async function validateCsproj(
     data: { command: "godot.csproj.validate", status, violations },
     exitCode: status === "pass" ? 0 : 1,
     summary: `godot.csproj.validate: ${status} (${violations.length} violations)`,
-  };
-}
-
-export function createCsprojValidateCommand(): KernelCommandDefinition<CsprojValidateData> {
-  return {
-    name: "godot.csproj.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate Game.csproj Godot C# settings (GODOT-06)",
-    scope: "workspace",
-    cacheable: false,
-    async execute(_input, context) {
-      return validateCsproj(context.workspaceRoot);
-    },
   };
 }

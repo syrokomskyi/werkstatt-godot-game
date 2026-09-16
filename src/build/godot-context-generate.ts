@@ -16,18 +16,21 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial AI context generator — godot.context.generate.</item>
-  <item>Enhancement: add addons list, enabled plugins, display/stretch settings.
+  <item>Enhancement: add addons list, enabled plugins, display/stretch settings.</item>
+  <item>Refactor: project.godot parsing via loadGodotProject model; canonical GODOT_SKIP_DIRS (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { existsSync } from "node:fs";
-import { readFile, readdir } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
 } from "@warpgogol/werkstatt-engine/kernel/types";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
+import { loadGodotProject } from "../utils/godot-project.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
 
 export interface GodotAddonInfo {
   name: string;
@@ -58,14 +61,12 @@ export interface GodotProjectContext {
 
 export type ContextGenerateData = GodotProjectContext;
 
-const SKIP_DIRS = ["bin", "obj", ".godot", ".git", "node_modules"];
-
 export async function generateContext(
   projectRoot: string,
 ): Promise<KernelCommandResult<ContextGenerateData>> {
-  const projectGodotPath = join(projectRoot, "project.godot");
+  const project = await loadGodotProject(projectRoot);
 
-  if (!existsSync(projectGodotPath)) {
+  if (!project) {
     return {
       data: {
         command: "godot.context.generate",
@@ -91,60 +92,23 @@ export async function generateContext(
     };
   }
 
-  const projectGodot = await readFile(projectGodotPath, "utf-8");
-
-  // Extract main scene
-  const mainSceneMatch = projectGodot.match(/^run\/main_scene="([^"]+)"/m);
-  const mainScene = mainSceneMatch?.[1] ?? null;
-
-  // Extract autoloads
-  const autoloads: { name: string; path: string }[] = [];
-  const autoloadPattern = /^autoload\/([^=]+)="([^"]+)"/gm;
-  let match: RegExpExecArray | null;
-  while ((match = autoloadPattern.exec(projectGodot)) !== null) {
-    autoloads.push({ name: match[1]!, path: match[2]! });
-  }
-
-  // Extract input actions
-  const inputActions: string[] = [];
-  const inputPattern = /^input\/([^=]+)=/gm;
-  while ((match = inputPattern.exec(projectGodot)) !== null) {
-    inputActions.push(match[1]!);
-  }
-
-  // Extract renderer
-  const rendererMatch = projectGodot.match(
-    /^rendering\/renderer\/rendering_method="([^"]+)"/m,
-  );
-  const renderer = rendererMatch?.[1] ?? null;
-
-  // Extract stretch mode
-  const stretchModeMatch = projectGodot.match(
-    /^display\/window\/stretch\/mode="([^"]+)"/m,
-  );
-  const stretchMode = stretchModeMatch?.[1] ?? null;
-
-  // Extract stretch aspect
-  const stretchAspectMatch = projectGodot.match(
-    /^display\/window\/stretch\/aspect="([^"]+)"/m,
-  );
-  const stretchAspect = stretchAspectMatch?.[1] ?? null;
-
-  // Extract window size
-  const windowWidthMatch = projectGodot.match(
-    /^display\/window\/size\/viewport_width=(\d+)/m,
-  );
-  const windowWidth = windowWidthMatch ? parseInt(windowWidthMatch[1]!, 10) : null;
-  const windowHeightMatch = projectGodot.match(
-    /^display\/window\/size\/viewport_height=(\d+)/m,
-  );
-  const windowHeight = windowHeightMatch ? parseInt(windowHeightMatch[1]!, 10) : null;
+  const {
+    mainScene,
+    autoloads,
+    inputActions,
+    renderer,
+    stretchMode,
+    stretchAspect,
+    windowWidth,
+    windowHeight,
+    enabledPlugins,
+  } = project;
 
   // List files
   const [scenes, scripts, resources] = await Promise.all([
-    listFilesRecursive(projectRoot, ".tscn", SKIP_DIRS),
-    listFilesRecursive(projectRoot, ".cs", SKIP_DIRS),
-    listFilesRecursive(projectRoot, ".tres", SKIP_DIRS),
+    listFilesRecursive(projectRoot, ".tscn", GODOT_SKIP_DIRS),
+    listFilesRecursive(projectRoot, ".cs", GODOT_SKIP_DIRS),
+    listFilesRecursive(projectRoot, ".tres", GODOT_SKIP_DIRS),
   ]);
 
   // List addons
@@ -157,11 +121,7 @@ export async function generateContext(
       const addonPath = join(addonsDir, addonName);
       const hasPluginCfg = existsSync(join(addonPath, "plugin.cfg"));
       const hasCsproj = existsSync(join(addonPath, `${addonName}.csproj`));
-      const enabledPattern = new RegExp(
-        `^\\[editor_plugins\\][^[]*enabled=.*"res://addons/${addonName}"`,
-        "ms",
-      );
-      const enabled = enabledPattern.test(projectGodot);
+      const enabled = enabledPlugins.includes(`res://addons/${addonName}`);
       addons.push({ name: addonName, enabled, hasPluginCfg, hasCsproj });
     }
   }

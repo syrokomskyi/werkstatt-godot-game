@@ -12,6 +12,8 @@
   <item>Does not build — build hook runs before deploy.</item>
   <item>Does not manage DNS or custom domains.</item>
 </non-goals>
+<!-- risk: vault -->
+<!-- risk: publish -->
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial itch.io deploy adapter — butler push to itch.io.</item>
@@ -19,14 +21,15 @@
   <item>Enhancement: multi-platform channel support — reads export_presets.cfg and pushes each platform to its own itch.io channel.</item>
   <item>Fix: use shared parseExportPresets from utils/parse-export-presets.ts instead of local duplicate.</item>
   <item>Fix: return multi-channel URLs in DeployResult.urls instead of overloading errors field.</item>
+  <item>Refactor: butler push via runTool seam with injectable executor (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
-import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import type { DeployResult } from "./types.ts";
 import { parseExportPresets } from "../utils/parse-export-presets.ts";
+import { runTool, type ToolExecutor } from "../utils/run-tool.ts";
 
 export interface ItchIoChannelConfig {
   channel: string;
@@ -45,7 +48,7 @@ export interface ItchIoAdapter {
   deploy(workpiecePath: string, config: ItchIoDeployConfig): DeployResult;
 }
 
-export function createItchIoAdapter(): ItchIoAdapter {
+export function createItchIoAdapter(executor?: ToolExecutor): ItchIoAdapter {
   return {
     deploy(workpiecePath: string, config: ItchIoDeployConfig): DeployResult {
       if (!config.apiKey) {
@@ -79,24 +82,24 @@ export function createItchIoAdapter(): ItchIoAdapter {
           continue;
         }
 
-        try {
-          const env: Record<string, string> = {
-            ...process.env,
-            BUTLER_API_KEY: config.apiKey,
-          };
+        const env: Record<string, string> = {
+          ...process.env,
+          BUTLER_API_KEY: config.apiKey,
+        };
 
-          execFileSync("butler", ["push", ch.buildPath, `${config.project}:${ch.channel}`], {
-            cwd: workpiecePath,
-            encoding: "utf-8",
-            timeout: 300_000,
-            stdio: ["pipe", "pipe", "pipe"],
-            env,
-          });
+        const result = runTool(
+          "butler",
+          ["push", ch.buildPath, `${config.project}:${ch.channel}`],
+          { cwd: workpiecePath, timeoutMs: 300_000, env },
+          executor,
+        );
 
+        if (result.ok) {
           urls.push(`https://${config.project}.itch.io/${ch.channel}`);
-        } catch (err) {
-          const message = err instanceof Error ? err.message : String(err);
-          errors.push(`itch.io deploy failed for channel "${ch.channel}": ${message}`);
+        } else {
+          errors.push(
+            `itch.io deploy failed for channel "${ch.channel}": ${result.output.slice(-300)}`,
+          );
         }
       }
 

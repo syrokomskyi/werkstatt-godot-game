@@ -8,26 +8,17 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial gitignore validator — checks .gitignore for .godot/ entry.</item>
+  <item>Refactor: shared GodotViolation/GodotCheckData types; command factory moved to spec table (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type {
-  KernelCommandDefinition,
-  KernelCommandResult,
-} from "@warpgogol/werkstatt-engine/kernel/types";
+import type { KernelCommandResult } from "@warpgogol/werkstatt-engine/kernel/types";
+import type { GodotCheckData, GodotViolation } from "./godot-check.ts";
 
-export interface GitignoreValidateViolation {
-  ruleId: string;
-  file: string;
-  message: string;
-}
-
-export interface GitignoreValidateData {
-  command: string;
+export interface GitignoreValidateData extends GodotCheckData {
   status: "pass" | "fail";
-  violations: GitignoreValidateViolation[];
 }
 
 const GITIGNORE = ".gitignore";
@@ -36,7 +27,7 @@ const GODOT_CACHE_PATTERN = ".godot/";
 export async function validateGitignore(
   projectRoot: string,
 ): Promise<KernelCommandResult<GitignoreValidateData>> {
-  const violations: GitignoreValidateViolation[] = [];
+  const violations: GodotViolation[] = [];
 
   let content = "";
   try {
@@ -73,19 +64,5 @@ export async function validateGitignore(
     data: { command: "godot.gitignore.validate", status, violations },
     exitCode: status === "pass" ? 0 : 1,
     summary: `godot.gitignore.validate: ${status} (${violations.length} violations)`,
-  };
-}
-
-export function createGitignoreValidateCommand(): KernelCommandDefinition<GitignoreValidateData> {
-  return {
-    name: "godot.gitignore.validate",
-    contract: "godot",
-    rules: [],
-    description: "Validate .godot/ is gitignored (GODOT-02)",
-    scope: "workspace",
-    cacheable: false,
-    async execute(_input, context) {
-      return validateGitignore(context.workspaceRoot);
-    },
   };
 }

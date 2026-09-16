@@ -28,6 +28,7 @@ import { join } from "node:path";
 import { createHash } from "node:crypto";
 import type { PluginHookContext, HookResult } from "@warpgogol/werkstatt-shared/plugin";
 import { listFilesRecursive } from "../utils/list-files-recursive.ts";
+import { GODOT_SKIP_DIRS } from "../paths/godot-paths.ts";
 
 export interface GodotReleaseEvidence {
   projectHash: string;
@@ -43,8 +44,6 @@ export interface GodotReleaseEvidence {
   generatedAt: string;
 }
 
-const SKIP_DIRS = ["bin", "obj", ".git", "node_modules"];
-
 export async function generateGodotEvidence(ctx: PluginHookContext): Promise<HookResult> {
   const projectRoot = ctx.workpiecePath ?? ctx.workspaceRoot;
 
@@ -52,8 +51,8 @@ export async function generateGodotEvidence(ctx: PluginHookContext): Promise<Hoo
   const sceneFiles = await listFilesRecursive(join(projectRoot, "Scenes"), ".tscn");
   const scriptFiles = await listFilesRecursive(join(projectRoot, "Scripts"), ".cs");
   const resourceFiles = await listFilesRecursive(join(projectRoot, "Resources"), ".tres");
-  const csprojFiles = await listFilesRecursive(projectRoot, ".csproj", SKIP_DIRS);
-  const slnFiles = await listFilesRecursive(projectRoot, ".sln", SKIP_DIRS);
+  const csprojFiles = await listFilesRecursive(projectRoot, ".csproj", GODOT_SKIP_DIRS);
+  const slnFiles = await listFilesRecursive(projectRoot, ".sln", GODOT_SKIP_DIRS);
   const importFiles = await listFilesRecursive(join(projectRoot, ".godot", "imported"), ".import");
 
   const scenesHash = await hashFiles(sceneFiles);

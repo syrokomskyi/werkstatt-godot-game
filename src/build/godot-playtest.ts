@@ -16,16 +16,21 @@
 </MODULE_CONTRACT>
 <CHANGE_SUMMARY>
   <item>Initial playtest command — godot.playtest.</item>
+  <item>Refactor: route godot run through runTool seam with injectable executor (architecture deepening).</item>
 </CHANGE_SUMMARY>
 */
 
-import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type {
   KernelCommandDefinition,
   KernelCommandResult,
 } from "@warpgogol/werkstatt-engine/kernel/types";
+import {
+  runTool,
+  extractPrefixedLines,
+  type ToolExecutor,
+} from "../utils/run-tool.ts";
 
 export interface PlaytestData {
   command: string;
@@ -40,14 +45,13 @@ export interface PlaytestData {
 
 const DEFAULT_DURATION_SEC = 15;
 const DEFAULT_FPS = 60;
-const ERROR_PATTERN = /^ERROR:/gm;
-const WARNING_PATTERN = /^WARNING:/gm;
 const STARTUP_THRESHOLD_MS = 3_000;
 
 export function runPlaytest(
   projectRoot: string,
   durationSec: number = DEFAULT_DURATION_SEC,
   fixedFps: number = DEFAULT_FPS,
+  executor?: ToolExecutor,
 ): KernelCommandResult<PlaytestData> {
   const projectGodot = join(projectRoot, "project.godot");
 
@@ -68,55 +72,23 @@ export function runPlaytest(
     };
   }
 
-  const startTime = Date.now();
-  let output = "";
-  let crashed = false;
+  const result = runTool(
+    "godot",
+    [
+      "--headless",
+      "--fixed-fps",
+      String(fixedFps),
+      "--quit-after",
+      String(durationSec),
+    ],
+    { cwd: projectRoot, timeoutMs: (durationSec + 10) * 1000 },
+    executor,
+  );
 
-  try {
-    output = execFileSync(
-      "godot",
-      [
-        "--headless",
-        "--fixed-fps",
-        String(fixedFps),
-        "--quit-after",
-        String(durationSec),
-      ],
-      {
-        cwd: projectRoot,
-        encoding: "utf-8",
-        timeout: (durationSec + 10) * 1000,
-        stdio: ["pipe", "pipe", "pipe"],
-      },
-    );
-  } catch (err) {
-    crashed = true;
-    const error = err as { stdout?: string; stderr?: string; message: string };
-    output = [error.stdout ?? "", error.stderr ?? "", error.message].join("\n");
-  }
-
-  const duration = Date.now() - startTime;
-  const errors: string[] = [];
-  const warnings: string[] = [];
-
-  // Extract ERROR: lines
-  let match: RegExpExecArray | null;
-  const errorPattern = new RegExp(ERROR_PATTERN);
-  errorPattern.lastIndex = 0;
-  while ((match = errorPattern.exec(output)) !== null) {
-    const lineEnd = output.indexOf("\n", match.index);
-    const line = output.slice(match.index, lineEnd === -1 ? undefined : lineEnd);
-    errors.push(line);
-  }
-
-  // Extract WARNING: lines
-  const warningPattern = new RegExp(WARNING_PATTERN);
-  warningPattern.lastIndex = 0;
-  while ((match = warningPattern.exec(output)) !== null) {
-    const lineEnd = output.indexOf("\n", match.index);
-    const line = output.slice(match.index, lineEnd === -1 ? undefined : lineEnd);
-    warnings.push(line);
-  }
+  const output = result.output;
+  const duration = result.durationMs;
+  const errors = extractPrefixedLines(output, "ERROR:");
+  const warnings = extractPrefixedLines(output, "WARNING:");
 
   // Classify errors: startup vs gameplay based on position in output
   const startupErrors: string[] = [];
@@ -131,7 +103,7 @@ export function runPlaytest(
     }
   }
 
-  const status = crashed || errors.length > 0 ? "fail" : "pass";
+  const status = !result.ok || errors.length > 0 ? "fail" : "pass";
 
   return {
     data: {
