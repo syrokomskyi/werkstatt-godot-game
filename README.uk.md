@@ -156,6 +156,7 @@ engine.registerPlugin(werkstattGodotPlugin);
 | `src/build/` | Хук збірки dotnet + dev-команди (dev server, test, smoke test, playtest, screenshot, context) |
 | `src/dev/` | Kernel-модуль реєстрації dev-команд |
 | `src/deploy/` | Адаптери деплою itch.io та GitHub Releases |
+| `src/utils/` | Спільні утиліти — `runTool` seam для підпроцесів, модель `loadGodotProject`, файлові walkers, парсери пресетів/посилань |
 | `src/onboarding/` | Хук скаффолда проєкту (генерація бойлерплейту) |
 | `src/release-evidence/` | Хук release evidence (SHA-256 хеші) |
 

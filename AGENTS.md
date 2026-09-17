@@ -44,6 +44,8 @@ All 25 packets (000–240) are completed. The Godot profile identity and stack b
 | Addon validator | `src/checks/addon-validate.ts` | `godot.addon.validate` (GODOT-12) |
 | Check gate | `src/checks/index.ts` | Runs all 12 validators in checkGate |
 | Check module | `src/checks/module.ts` | Kernel module registering validators |
+| Check spec table | `src/checks/specs.ts` | `GODOT_CHECKS` — single source for command names, gate order, blocking flags, invariants |
+| Check harness | `src/checks/godot-check.ts` | Shared `GodotViolation`/`GodotCheckData` types, `godotCheckToCommand`, spec-driven gate runner |
 | Build hook | `src/build/dotnet-build.ts` | `hooks.build` — runs `dotnet build` then Godot export |
 | Dev server | `src/build/godot-dev-server.ts` | `godot.dev.server` — launches `godot --editor` |
 | Test runner | `src/build/dotnet-test.ts` | `godot.test` — runs `dotnet test` |
@@ -56,6 +58,7 @@ All 25 packets (000–240) are completed. The Godot profile identity and stack b
 | GitHub Releases | `src/deploy/github-releases.ts` | `deployAdapters["github-releases"]` |
 | Scaffold | `src/onboarding/scaffold-project.ts` | `hooks.scaffoldProject` |
 | Release evidence | `src/release-evidence/godot-evidence.ts` | `hooks.releaseEvidence` |
+| Shared utils | `src/utils/` | `runTool` subprocess seam, `loadGodotProject` model, `listFilesRecursive`, `parseExportPresets`, `extractResReferences` |
 
 ## Stack invariants
 
@@ -91,7 +94,7 @@ All 25 packets (000–240) are completed. The Godot profile identity and stack b
 11. `godot.nuget.validate` — NuGet packages in Game.csproj (GODOT-11)
 12. `godot.addon.validate` — addon structure and NuGet deps (GODOT-12)
 
-All must pass for checkGate to succeed (GODOT-04 is non-blocking warnings).
+All must pass for checkGate to succeed (GODOT-04 is non-blocking warnings). The gate is spec-driven: `runGodotCheckGate` iterates `GODOT_CHECKS` (`src/checks/specs.ts`), so command names, order, blocking flags, and invariant text cannot drift apart.
 
 ## Credential injection
 
@@ -102,7 +105,7 @@ Deploy adapters read credentials from `systems/registry.yaml` channel config, ne
 
 ## Build hook
 
-`hooks.build` runs `dotnet build ./Game.csproj` in the workpiece directory via `execFileSync`. If `export_presets.cfg` exists, it then runs `godot --headless --export-release` for each preset. Reports success/failure via HookResult.
+`hooks.build` runs `dotnet build ./Game.csproj` in the workpiece directory via the shared `runTool` seam (`src/utils/run-tool.ts`, injectable executor). If `export_presets.cfg` exists, it then runs `godot --headless --export-release` for each preset. Reports success/failure via HookResult.
 
 ## Skills
 

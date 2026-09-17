@@ -158,6 +158,7 @@ The plugin exports a single `WerkstattPlugin` object with `profileId: "godot-csh
 | `src/deploy/` | itch.io and GitHub Releases deploy adapters |
 | `src/onboarding/` | Project scaffold hook (boilerplate generation) |
 | `src/release-evidence/` | Release evidence hook (SHA-256 hashes) |
+| `src/utils/` | Shared utilities — `runTool` subprocess seam, `loadGodotProject` model, file walkers, preset/reference parsers |
 
 ---
 
