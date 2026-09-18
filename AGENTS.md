@@ -127,6 +127,8 @@ Three Godot-specific skills are bundled with this plugin:
 | `test`        | `vitest run`                              |
 | `test:watch`  | `vitest`                                  |
 
+`tsconfig.json` keeps `strict: true` + `skipLibCheck: true`: the package compiles dependency `.ts` source (`werkstatt-engine`, `werkstatt-shared`) which requires `strictNullChecks` for union narrowing. Without `strict`, the build fails with `Property 'code' does not exist`-style errors.
+
 ## Publication
 
 This package is published via repo-extract (RFC-0773). See `extract.config.yaml` for the extraction configuration. The package MUST NOT be published without operator approval.
